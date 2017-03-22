@@ -1,18 +1,15 @@
-#print current ip address to slack
+#Axelle Jamous 2EA1 s090603
 
 #imports
 import socket
 from slackclient import SlackClient
 import os
 
-SLACK_TOKEN = 
+SLACK_TOKEN = 'insert token here' #deleted my token for github but to test place a token here
 slack_client = SlackClient(SLACK_TOKEN)
-user_slack_id = 'axelle'
-im_call = slack_client.api_call("im.list")
+user_slack_id = '@axelle' #change this to your own username for testing
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-#hostname = socket.gethostname()
-#ip = socket.gethostbyname(hostname) #will return first ip found
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(("8.8.8.8",80)) #surf to google dns and see what ip it uses
 print('Used IP: ' + s.getsockname()[0])
@@ -36,6 +33,14 @@ def send_msg(channel_id, msg):
 		icon_emoji=':robot_face:'
 	)
 
+def send_priv_msg(msg):
+	slack_client.api_call(
+		"chat.postMessage",
+		asuser = True,
+		channel=user_slack_id,
+		text=msg
+	)
+
 #main
 #we will send a message both in the general channel and as dm
 if __name__ == '__main__':
@@ -48,23 +53,16 @@ if __name__ == '__main__':
 			if channel['name'] == 'general':
 				send_msg(channel['id'], "Hello " + channel['name'] + '!')
 
-				#search users IM channel ID 
-				if im_call.get('ok'):
-					print("im call success")
-					for im in im_call.get('ims'):
-						if im.get('user') == user_slack_id:
-							im_channel = im.get('id')
-							send_msg(channel[im_channel], "Test")
-
 				f = open(os.path.join(__location__, 'ipFile.txt'), 'r')
 				prev_ip = f.read()
 				f.close()
 
 				if prev_ip != '' and ip == prev_ip:
-					send_msg(channel['id'], "IP is the same as last time!")
+					send_msg(channel['id'], "IP is the same as last time! ->" + ip)
+					send_priv_msg("IP is the same as last time! ->" + ip)
 				else:
-					send_msg(channel['id'], "IP: " + ip)
-					send_msg(channel[user_slack_id], "IP: " + ip) 
+					send_msg(channel['id'], "Your IP: " + ip)
+					send_priv_msg("Your IP: " + ip)
 			
 					f = open(os.path.join(__location__, 'ipFile.txt'),'w')
 					f.write(ip)
