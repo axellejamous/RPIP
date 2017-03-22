@@ -5,7 +5,7 @@ import socket
 from slackclient import SlackClient
 import os
 
-SLACK_TOKEN = 'xoxp-143901355236-143911167621-143830738338-d262f929502e2245860a9866e2a5b3da'
+SLACK_TOKEN = 
 slack_client = SlackClient(SLACK_TOKEN)
 user_slack_id = 'axelle'
 im_call = slack_client.api_call("im.list")
