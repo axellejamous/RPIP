@@ -1,3 +1,5 @@
+#Axelle Jamous s090603 2EA1
+
 from gpiozero import PWMLED, Button
 
 #setup
@@ -11,10 +13,11 @@ def pressed(btn):
 
 	print("button clicked " + str(brightness))
 
-	if brightness >= 1: 	
+	#not 1 because python 
+	if brightness >= 0.95: 	
 		brightness = 0 #reset 
 
-	elif brightness >= 0 and brightness < 1:
+	elif brightness >= 0 and brightness < 0.95:
 		brightness+=0.1
 
 	else:
@@ -25,5 +28,4 @@ def pressed(btn):
 
 #main
 while True:
-	print("before press " + str(brightness))
         button.when_pressed = pressed #call pressed fct when pressed
