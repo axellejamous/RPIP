@@ -1,3 +1,5 @@
+#Axelle Jamous s090603 2EA1
+
 from gpiozero import LED, Button
 from time import sleep
 from random import uniform
