@@ -1,5 +1,4 @@
-#alarmsysteem 
-#Axelle Jamous 2EA1
+#alarmsysteem Axelle Jamous 2EA1
 
 from gpiozero import DistanceSensor
 
