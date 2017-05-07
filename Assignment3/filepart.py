@@ -58,7 +58,7 @@ def main():
     elif i==1:               #When output from motion sensor is HIGH
         if globFlag==0:
             #output time to file
-            writeFile("timeFile.txt", strftime("%a, %d %b %Y %H:%M:%S"))
+            writeFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
             #set flag to on
             globFlag = 1
 
