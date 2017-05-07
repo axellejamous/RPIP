@@ -1,34 +1,86 @@
-#alarmsysteem 
-#Axelle Jamous 2EA1
+import RPi.GPIO as GPIO
+import os
+from time import sleep, strftime, time
 
-from gpiozero import DistanceSensor
+IRS = 11
+BTN = 5
+LED = 3
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(IRS, GPIO.IN) #Read output from IR motion sensor
+GPIO.setup(BTN, GPIO.IN)
+GPIO.setup(LED, GPIO.OUT)
+
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+globFlag = 0
+
+def cleanupTool():
+    lineCln()
+    rangeCln()
+    return
+
+def lineCln():
+    lines = readFile("logFile.txt")  
+    #print every line and ask user if he wants to delete it 
+    return
+
+def rangeCln():
+    lines = readFile("logFile.txt")
+    #ask user for start and stop date
+    #delete all entries in file in given date range
+    return
+
+def readFile(fileName):
+    #read file line per line w timestamps
+    f = open(os.path.join(__location__, fileName), "r")
+    lines = f.readlines() #list
+    f.close()
+    return lines
+
+def writeFile(fileName, stringToFile):
+    f = open(os.path.join(__location__, fileName), "a")
+    f.write(stringToFile)
+    f.close()
+
+def btnTimer():
+    global start
+    global end
+    if GPIO.input(BTN) == 1:
+        start = time()
+    if GPIO.input(BTN) == 0:
+        end = time()
+        elapsed = end - start
+        print(elapsed)
+    #GPIO.add_event_detect(25, GPIO.BOTH, callback=my_callback) #stuck here 
+
+def main():
+    global globFlag
+    
+    i=GPIO.input(IRS)
+    if i==0:                 #When output from motion sensor is LOW
+        #set flag back to 0 for time
+        globFlag = 0
+        
+        print "No intruders",i
+        GPIO.output(LED, 0)  #Turn OFF LED
+        sleep(0.1)
+    elif i==1:               #When output from motion sensor is HIGH
+        if globFlag==0:
+            #output time to file
+            writeFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
+            #set flag to on
+            globFlag = 1
+
+        #door is still open but hasn't been shut    
+        print "Intruder detected",i
+        GPIO.output(LED, 1)  #Turn ON LED
+        sleep(0.1)
 
 
-ultrasonic = DistanceSensor(echo=17, trigger=4) #echo and trigger pins
-#if u want to change the default threshold distance/max distance (see below) use this code:
-#ultrasonic = DistanceSensor(echo=17, trigger=4, threshold_distance=0.5)
-#ultrasonic = DistanceSensor(echo=17, trigger=4, max_distance=2)
-
-#or after the sensor is created:
-#ultrasonic.threshold_distance = 0.5
-#ultrasonic.max_distance = 2
-
-def hello():
-    print("Hello")
-
-def bye():
-    print("Bye")
-
-while True:
-    print(ultrasonic.distance) #show distance
-
-    #do something when in and out of range
-    #The default range threshold is 0.3m and default maximum is 1m
-    #wait_for = blocking program is on halt until triggered
-    #ultrasonic.wait_for_in_range() = hello
-    #ultrasonic.wait_for_out_of_range() = bye
-
-    #when triggers actions in the background while other code is happening:
-    ultrasonic.when_in_range() = hello
-    ultrasonic.when_out_of_range() = bye
-
+#toplevel script
+#below will only execute if ran directly - above is always accessible 
+if __name__ == '__main__':
+    while True:
+        main()
