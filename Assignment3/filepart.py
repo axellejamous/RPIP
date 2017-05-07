@@ -22,18 +22,14 @@ def cleanupTool():
     return
 
 def lineCln():
-    lines = readFile("logFile.txt")
-    
-    #print every line and ask user if he wants to delete it
-    
+    lines = readFile("logFile.txt")  
+    #print every line and ask user if he wants to delete it 
     return
 
 def rangeCln():
     lines = readFile("logFile.txt")
-
     #ask user for start and stop date
     #delete all entries in file in given date range
-
     return
 
 def readFile(fileName):
@@ -57,7 +53,7 @@ def btnTimer():
         end = time()
         elapsed = end - start
         print(elapsed)
-    #GPIO.add_event_detect(25, GPIO.BOTH, callback=my_callback, bouncetime=200)
+    #GPIO.add_event_detect(25, GPIO.BOTH, callback=my_callback) #stuck here 
 
 def main():
     global globFlag
