@@ -4,7 +4,7 @@ from time import sleep, strftime
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.IN)         #Read output from IR motion sensor
-GPIO.setup(2, GPIO.IN)          #Button
+GPIO.setup(5, GPIO.IN)          #Button
 GPIO.setup(3, GPIO.OUT)         #LED output pin
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
