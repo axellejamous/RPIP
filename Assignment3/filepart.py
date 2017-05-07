@@ -1,14 +1,14 @@
 import RPi.GPIO as GPIO
 from time import sleep
-from gpiozero import Button, LED
+#from gpiozero import Button, LED
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.IN)         #Read output from PIR motion sensor
-#GPIO.setup(3, GPIO.OUT)         #LED output pin
+GPIO.setup(3, GPIO.OUT)         #LED output pin
 
-button = Button(3)
-led = LED(2)
+#button = Button(3)
+#led = LED(2)
 
 def cleanupTool():
     lineCln()
@@ -41,13 +41,13 @@ def main():
     i=GPIO.input(11)
     if i==0:                 #When output from motion sensor is LOW
         print "No intruders",i
-        #GPIO.output(3, 0)  #Turn OFF LED
-        led.on()
+        GPIO.output(3, 0)  #Turn OFF LED
+        #led.on()
         sleep(0.1)
     elif i==1:               #When output from motion sensor is HIGH
         print "Intruder detected",i
-        #GPIO.output(3, 1)  #Turn ON LED
-        led.off()
+        GPIO.output(3, 1)  #Turn ON LED
+        #led.off()
         sleep(0.1)
     
     #try:
