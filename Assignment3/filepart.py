@@ -60,9 +60,8 @@ def main():
             writeFile("timeFile.txt", time.strftime("%a, %d %b %Y %H:%M:%S"))
             #set flag to on
             globFlag = 1
-        else:
-            #door is still open but hasn't been shut
-            
+
+        #door is still open but hasn't been shut    
         print "Intruder detected",i
         GPIO.output(3, 1)  #Turn ON LED
         sleep(0.1)
