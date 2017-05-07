@@ -63,7 +63,7 @@ def main():
         #set flag back to 0 for time
         globFlag = 0
         
-        print "No intruders",i
+        print "Door closed",i
         GPIO.output(LED, 0)  #Turn OFF LED
         sleep(0.1)
     elif i==1:               #When output from motion sensor is HIGH
@@ -74,7 +74,7 @@ def main():
             globFlag = 1
 
         #door is still open but hasn't been shut    
-        print "Intruder detected",i
+        print "Door open",i
         GPIO.output(LED, 1)  #Turn ON LED
         sleep(0.1)
 
