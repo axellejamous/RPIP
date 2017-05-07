@@ -2,11 +2,15 @@ import RPi.GPIO as GPIO
 import os
 from time import sleep, strftime
 
+IRS = 11
+BTN = 5
+LED = 3
+
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(11, GPIO.IN)         #Read output from IR motion sensor
-GPIO.setup(5, GPIO.IN)          #Button
-GPIO.setup(3, GPIO.OUT)         #LED output pin
+GPIO.setup(IRS, GPIO.IN) #Read output from IR motion sensor
+GPIO.setup(BTN, GPIO.IN)
+GPIO.setup(LED, GPIO.OUT)
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -42,18 +46,18 @@ def readFile(fileName):
 def writeFile(fileName, stringToFile):
     f = open(os.path.join(__location__, fileName), "a")
     f.write(stringToFile)
-    f.close
+    f.close()
 
 def main():
     global globFlag
     
-    i=GPIO.input(11)
+    i=GPIO.input(IRS)
     if i==0:                 #When output from motion sensor is LOW
         #set flag back to 0 for time
         globFlag = 0
         
         print "No intruders",i
-        GPIO.output(3, 0)  #Turn OFF LED
+        GPIO.output(LED, 0)  #Turn OFF LED
         sleep(0.1)
     elif i==1:               #When output from motion sensor is HIGH
         if globFlag==0:
@@ -64,7 +68,7 @@ def main():
 
         #door is still open but hasn't been shut    
         print "Intruder detected",i
-        GPIO.output(3, 1)  #Turn ON LED
+        GPIO.output(LED, 1)  #Turn ON LED
         sleep(0.1)
 
 
