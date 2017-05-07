@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import os
-from time import sleep, strftime
+from time import sleep, strftime, time
 
 IRS = 11
 BTN = 5
@@ -47,6 +47,17 @@ def writeFile(fileName, stringToFile):
     f = open(os.path.join(__location__, fileName), "a")
     f.write(stringToFile)
     f.close()
+
+def btnTimer():
+    global start
+    global end
+    if GPIO.input(BTN) == 1:
+        start = time()
+    if GPIO.input(BTN) == 0:
+        end = time()
+        elapsed = end - start
+        print(elapsed)
+    #GPIO.add_event_detect(25, GPIO.BOTH, callback=my_callback, bouncetime=200)
 
 def main():
     global globFlag
