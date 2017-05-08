@@ -44,7 +44,7 @@ def writeFile(fileName, stringToFile):
     f.write(stringToFile)
     f.close()
 
-def timerCallback():
+def timerCallback(channel):
     global start
     global end
     if GPIO.input(BTN) == 1:
