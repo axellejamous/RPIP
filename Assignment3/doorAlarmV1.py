@@ -44,7 +44,7 @@ def writeFile(fileName, stringToFile):
     f.write(stringToFile)
     f.close()
 
-def btnTimer():
+def timerCallback():
     global start
     global end
     if GPIO.input(BTN) == 1:
@@ -53,7 +53,11 @@ def btnTimer():
         end = time()
         elapsed = end - start
         print(elapsed)
-    #GPIO.add_event_detect(25, GPIO.BOTH, callback=my_callback) #stuck here 
+
+    #GPIO.add_event_detect(channel, GPIO.RISING)  # add rising edge detection on a channel
+    #    do_something()
+    #if GPIO.event_detected(channel):
+    #    print('Button pressed')
 
 def main():
     global globFlag
@@ -77,6 +81,8 @@ def main():
         print "Door open",i
         GPIO.output(LED, 1)  #Turn ON LED
         sleep(0.1)
+
+        GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback) 
 
 
 #toplevel script
