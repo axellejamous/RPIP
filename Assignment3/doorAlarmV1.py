@@ -46,7 +46,7 @@ def writeFile(fileName, stringToFile):
     f.write(stringToFile)
     f.close()
 
-def timerCallback(channel):
+def timerCallback(elapsed):
     global start
     global end
     if GPIO.input(BTN) == 1:
@@ -54,12 +54,18 @@ def timerCallback(channel):
     if GPIO.input(BTN) == 0:
         end = time()
         elapsed = end - start
-        print(elapsed)
+        #print(elapsed)
+    return elapsed
 
 # only add the detection call once!
-GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback) 
+GPIO.add_event_detect(BTN, GPIO.BOTH) 
 
 def main():
+    if GPIO.event_detected(channel):
+        timerCallback(elapsed)
+
+    if elapsed>5:
+        
     global globFlag
     
     i=GPIO.input(IRS)
