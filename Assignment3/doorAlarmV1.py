@@ -14,7 +14,9 @@ GPIO.setup(LED, GPIO.OUT)
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+#global
 globFlag = 0
+start = end = 0;
 
 def cleanupTool():
     lineCln()
@@ -53,11 +55,6 @@ def timerCallback(channel):
         end = time()
         elapsed = end - start
         print(elapsed)
-
-    #GPIO.add_event_detect(channel, GPIO.RISING)  # add rising edge detection on a channel
-    #    do_something()
-    #if GPIO.event_detected(channel):
-    #    print('Button pressed')
 
 # only add the detection call once!
 GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback) 
