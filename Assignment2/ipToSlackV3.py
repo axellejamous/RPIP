@@ -4,6 +4,9 @@
 import socket
 from slackclient import SlackClient
 import os
+from time import sleep
+
+sleep(60)
 
 SLACK_TOKEN = 'insert token here' #deleted my token for github but to test place a token here
 slack_client = SlackClient(SLACK_TOKEN)
