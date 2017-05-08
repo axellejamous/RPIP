@@ -59,6 +59,9 @@ def timerCallback():
     #if GPIO.event_detected(channel):
     #    print('Button pressed')
 
+# only add the detection call once!
+GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback) 
+
 def main():
     global globFlag
     
@@ -81,9 +84,6 @@ def main():
         print "Door open",i
         GPIO.output(LED, 1)  #Turn ON LED
         sleep(0.1)
-
-        GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback) 
-
 
 #toplevel script
 #below will only execute if ran directly - above is always accessible 
