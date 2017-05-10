@@ -29,8 +29,8 @@ def set_leds(leds, states):
 
 Broker = "127.0.0.1""
 
-rcv_topic = "home/groundfloor/livingroom/lights/lightx"    # receive messages on this topic
-snd_topic = "home/groundfloor/kitchen/lights/lightx"       # send messages to this topic
+rcv_topic = "home/groundfloor/kitchen/lights/lightx"       # send messages to this topic
+snd_topic = "home/groundfloor/livingroom/lights/lightx"    # receive messages on this topic
 
 #when connecting:
 def on_connect(mqttc, obj, flags, rc):
