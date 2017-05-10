@@ -6,11 +6,11 @@ import paho.mqtt.publish as publish
 
 ############### gpio in/outputs ##################
 
-btn1 = 5 #red
-btn2 = 3 #yellow
-led1 = 3 #red
-led2 = 3 #yellow
-btnMaster = 10 #green
+btn1 = 3 #red
+btn2 = 5 #yellow
+btnMaster = 7 #green
+led1 = 8 #red
+led2 = 10 #yellow
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
@@ -23,7 +23,7 @@ GPIO.setup(led2, GPIO.OUT)
 ############### led related functions ##################
 
 def set_leds(leds, states):
-    io.output(leds, states)
+    GPIO.output(leds, states)  #Turn OFF LED
 
 ############### MQTT section ##################
 
@@ -43,7 +43,7 @@ def on_message(mqttc, obj, msg):
     try:
         p = msg.payload.decode("utf-8") #ASK TEACHER
         x = json.loads(p) #ASK TEACHER
-        set_leds(leds, tuple(x['leds'])) #ASK TEACHER
+        set_leds(leds, tuple(x['leds'])) #set leds to received value
         return
     except Exception as e:
         print(e)
