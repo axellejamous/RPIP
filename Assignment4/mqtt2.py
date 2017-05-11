@@ -62,7 +62,7 @@ mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 mqttc.connect(Broker, 1883, 60) #last could be a port too
-client.loop_start() #client.loop_forever()
+mqttc.loop_start() #client.loop_forever()
 
 ############### main ##################
 
@@ -70,7 +70,7 @@ def main():
     try:
         while True:
             dataToSend = "tmp";
-            client.publish(snd_topic, str(dataToSend))
+           mqttc.publish(snd_topic, str(dataToSend))
             sleep(1*60)
             #mqttc.loop() #ASK TEACHER
     except KeyboardInterrupt:
