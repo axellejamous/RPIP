@@ -40,13 +40,13 @@ def on_connect(mqttc, obj, flags, rc):
 #when receving a message:
 def on_message(mqttc, obj, msg):
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
-    try:
-        p = msg.payload.decode("utf-8") #ASK TEACHER
-        x = json.loads(p) #ASK TEACHER
-        set_leds(leds, tuple(x['leds'])) #set leds to received value
-        return
-    except Exception as e:
-        print(e)
+    #try:
+    #    p = msg.payload.decode("utf-8") #ASK TEACHER
+    #    x = json.loads(p) #ASK TEACHER
+    #    set_leds(leds, tuple(x['leds'])) #set leds to received value
+    #    return
+    #except Exception as e:
+    #    print(e)
 
 # callback functie voor publish  event
 def on_publish(mqttc, obj, mid):
