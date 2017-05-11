@@ -27,7 +27,7 @@ def set_leds(leds, states):
 
 ############### MQTT section ##################
 
-Broker = "127.0.0.1""
+Broker = "127.0.0.1"
 
 rcv_topic = "home/groundfloor/livingroom/lights/lightx"    # receive messages on this topic
 snd_topic = "home/groundfloor/kitchen/lights/lightx"       # send messages to this topic
