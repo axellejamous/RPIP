@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import os
 from time import sleep
-import paho.mqtt.client as mqtt
+import paho.mqtt.client as mqttc
 import paho.mqtt.publish as publish
 
 ############### gpio in/outputs ##################
@@ -58,12 +58,14 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
 mqttc = mqtt.Client()
+mqttc.connect(Broker, 1883, 60) #last could be a port too
+mqttc.loop_start() #client.loop_forever()
+
 mqttc.on_message = on_message
 mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
-mqttc.connect(Broker, 1883, 60) #last could be a port too
-mqttc.loop_start() #client.loop_forever()
+
 
 ############### main ##################
 
