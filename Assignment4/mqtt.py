@@ -1,6 +1,5 @@
-import RPi.GPIO as GPIO
+import RPi.GPIO as io
 import os
-import io
 from time import sleep
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
@@ -102,7 +101,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-#        io.cleanup()
+        io.cleanup()
 
 #toplevel script
 #below will only execute if ran directly - above is always accessible
