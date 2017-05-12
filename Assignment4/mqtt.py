@@ -6,21 +6,19 @@ import paho.mqtt.publish as publish
 
 ############### gpio in/outputs ##################
 
-btn1 = 3 #red
-btn2 = 5 #yellow
-btnMaster = 7 #green
-led1 = 8 #red
-led2 = 10 #yellow
+btn1 = 2 #red
+btn2 = 3 #yellow
+btnMaster = 4 #green
+led1 = 14 #red
+led2 = 15 #yellow
 leds = (led1, led2)
 led1State = led2State = false;
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(btn1, GPIO.IN)
-GPIO.setup(btn2, GPIO.IN)
-GPIO.setup(btnMaster, GPIO.IN)
-GPIO.setup(led1, GPIO.OUT)
-GPIO.setup(led2, GPIO.OUT)
+#GPIO.setwarnings(False)
+GPIO.setmode(io.BCM)
+GPIO.setup(btn1, io.IN)
+GPIO.setup(btn2, io.IN)
+GPIO.setup(btnMaster, io.IN)
 
 ############### MQTT section ##################
 
@@ -64,7 +62,10 @@ mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 
-############### led&button related ##################
+############### led&button section ##################
+def init_leds(leds):
+    io.setmode(io.BCM)
+    io.setup(leds, io.OUT)
 
 def set_leds(leds, states):
     GPIO.output(leds, states)  #Turn OFF LED
@@ -94,9 +95,10 @@ io.add_event_detect(btnMaster,io.FALLING,callback=snd_msg(3),bouncetime=500)
 def main():
     try:
         while True:
-            dataToSend = "tmp";
-            mqttc.publish(snd_topic, str(dataToSend))
-            sleep(1*60)
+            init_leds(leds)
+            #dataToSend = "tmp";
+            #mqttc.publish(snd_topic, str(dataToSend))
+            #sleep(1*60)
             #mqttc.loop() #ASK TEACHER
     except KeyboardInterrupt:
         pass
