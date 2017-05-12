@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import os
 from time import sleep
-import paho.mqtt.client as mqttc
+import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 
 ############### gpio in/outputs ##################
@@ -27,7 +27,7 @@ def set_leds(leds, states):
 
 ############### MQTT section ##################
 
-Broker = "172.16.145.184"
+Broker = "192.168.1.10"
 
 rcv_topic = "home/groundfloor/livingroom/lights/lightx"    # receive messages on this topic
 snd_topic = "home/groundfloor/kitchen/lights/lightx"       # send messages to this topic
@@ -39,7 +39,7 @@ def on_connect(mqttc, obj, flags, rc):
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
-    print(msg + " " + str(msg))
+    print(msg.payload)
     #print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     #try:
     #    p = msg.payload.decode("utf-8") #ASK TEACHER
