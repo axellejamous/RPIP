@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import os
+import io
 from time import sleep
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
@@ -11,6 +12,7 @@ btn2 = 5 #yellow
 btnMaster = 7 #green
 led1 = 8 #red
 led2 = 10 #yellow
+leds = (led1, led2)
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
@@ -19,11 +21,6 @@ GPIO.setup(btn2, GPIO.IN)
 GPIO.setup(btnMaster, GPIO.IN)
 GPIO.setup(led1, GPIO.OUT)
 GPIO.setup(led2, GPIO.OUT)
-
-############### led related functions ##################
-
-def set_leds(leds, states):
-    GPIO.output(leds, states)  #Turn OFF LED
 
 ############### MQTT section ##################
 
@@ -39,15 +36,16 @@ def on_connect(mqttc, obj, flags, rc):
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
-    print(str(msg.payload))
-    #print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
-    #try:
-    #    p = msg.payload.decode("utf-8") #ASK TEACHER
-    #    x = json.loads(p) #ASK TEACHER
-    #    set_leds(leds, tuple(x['leds'])) #set leds to received value
-    #    return
-    #except Exception as e:
-    #    print(e)
+    print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+    try:
+        p = msg.payload.decode("utf-8")
+        print(p)
+        x = json.loads(p)
+        set_leds(leds, tuple(x['leds'])) #set leds to received value
+
+        return
+    except Exception as e:
+        print(e)
 
 # callback functie voor publish  event
 def on_publish(mqttc, obj, mid):
@@ -66,6 +64,19 @@ mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
 
+############### led&button related ##################
+
+def set_leds(leds, states):
+    GPIO.output(leds, states)  #Turn OFF LED
+
+def snd_msg():
+    dataToSend = {"leds":[true,false,true]}
+    mqttc.publish(snd_topic, dataToSend)
+
+
+io.add_event_detect(btn1,io.FALLING,callback=snd_msg,bouncetime=500)
+io.add_event_detect(btn2,io.FALLING,callback=snd_msg,bouncetime=500)
+io.add_event_detect(btnMaster,io.FALLING,callback=snd_msg,bouncetime=500)
 
 ############### main ##################
 
