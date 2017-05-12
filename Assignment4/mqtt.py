@@ -39,7 +39,7 @@ def on_connect(mqttc, obj, flags, rc):
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
-    print(msg.payload)
+    print(str(msg.payload))
     #print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     #try:
     #    p = msg.payload.decode("utf-8") #ASK TEACHER
@@ -79,7 +79,7 @@ def main():
     except KeyboardInterrupt:
         pass
     finally:
-        io.cleanup()
+#        io.cleanup()
 
 #toplevel script
 #below will only execute if ran directly - above is always accessible
