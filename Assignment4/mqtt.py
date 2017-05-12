@@ -13,6 +13,7 @@ btnMaster = 7 #green
 led1 = 8 #red
 led2 = 10 #yellow
 leds = (led1, led2)
+led1State = led2State = false;
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
@@ -69,14 +70,25 @@ mqttc.on_subscribe = on_subscribe
 def set_leds(leds, states):
     GPIO.output(leds, states)  #Turn OFF LED
 
-def snd_msg():
-    dataToSend = {"leds":[true,false,true]}
+def snd_msg(led):
+    global led1State
+    global led2State
+
+    if led==1:
+        led1State = not led1State
+    elif led==2:
+        led2State = not led2State
+    elif led==3:
+        led1State = led2State = false
+    else:
+        print('mate the wrong parameter is being given')
+
+    dataToSend = {"leds":[led1State,led2State]}
     mqttc.publish(snd_topic, dataToSend)
 
-
-io.add_event_detect(btn1,io.FALLING,callback=snd_msg,bouncetime=500)
-io.add_event_detect(btn2,io.FALLING,callback=snd_msg,bouncetime=500)
-io.add_event_detect(btnMaster,io.FALLING,callback=snd_msg,bouncetime=500)
+io.add_event_detect(btn1,io.FALLING,callback=snd_msg(1),bouncetime=500)
+io.add_event_detect(btn2,io.FALLING,callback=snd_msg(2),bouncetime=500)
+io.add_event_detect(btnMaster,io.FALLING,callback=snd_msg(3),bouncetime=500)
 
 ############### main ##################
 
