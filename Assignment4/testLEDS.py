@@ -5,7 +5,7 @@ GPIO.setup(23, GPIO.OUT)
 GPIO.setup(24, GPIO.OUT)
 GPIO.setup(4, GPIO.IN)
 
-def printer():
+def printer(channel):
     print("button pushed successfully")
 
 GPIO.add_event_detect(4,GPIO.FALLING,callback=printer,bouncetime=500)
