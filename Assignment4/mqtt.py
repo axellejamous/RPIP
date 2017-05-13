@@ -104,10 +104,8 @@ def main():
     try:
         while True:
             init_leds(leds)
-            #dataToSend = "tmp";
-            #mqttc.publish(snd_topic, str(dataToSend))
-            #sleep(1*60)
-            #mqttc.loop() #ASK TEACHER
+            dataToSend = "tmp";
+            mqttc.publish(snd_topic, str(dataToSend))
     except KeyboardInterrupt:
         pass
     finally:
