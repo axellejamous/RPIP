@@ -71,6 +71,7 @@ def init_leds(leds):
 def set_leds(leds, states):
     print("leds and states: " + str(leds) + " " + str(states))
     io.output(leds, states)
+    io.output(led2,1)
 
 def snd_msg(led):
     global led1State
