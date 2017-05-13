@@ -103,7 +103,7 @@ io.add_event_detect(btn2,io.FALLING,callback=lambda *a: snd_msg(2),bouncetime=50
 def main():
     try:
         while True:
-            #init_leds(leds)
+            return
     except KeyboardInterrupt:
         pass
     finally:
