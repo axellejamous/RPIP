@@ -10,8 +10,8 @@ import paho.mqtt.publish as publish
 btn1 = 2 #red
 btn2 = 3 #yellow
 btnMaster = 18 #green
-led1 = 14 #red
-led2 = 15 #yellow
+led1 = 23 #red
+led2 = 24 #yellow
 leds = (led1, led2)
 led1State = led2State = False;
 
@@ -35,6 +35,7 @@ def on_connect(mqttc, obj, flags, rc):
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
+    print("sub")
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     try:
         p = msg.payload.decode("utf-8")
@@ -48,7 +49,7 @@ def on_message(mqttc, obj, msg):
 
 # callback functie voor publish  event
 def on_publish(mqttc, obj, mid):
-#    print("mid: "+str(mid))
+    print("pub")
     return
 
 # callback functie voor subscribe event
@@ -56,21 +57,20 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
 mqttc = mqtt.Client()
-mqttc.connect(Broker, 1883, 60) #last could be a port too
-mqttc.loop_start() #client.loop_forever()
-
 mqttc.on_message = on_message
 mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
+mqttc.connect(Broker, 1883, 60) #last could be a port too
+mqttc.loop_start() #client.loop_forever()
 
 ############### led&button section ##################
 def init_leds(leds):
-    io.setmode(io.BCM)
     io.setup(leds, io.OUT)
 
 def set_leds(leds, states):
-    io.output(leds, states)  #Turn OFF LED
+    print("leds and states: " + str(leds) + " " + str(states))
+    io.output(leds, states)
 
 def snd_msg(led):
     global led1State
@@ -87,9 +87,8 @@ def snd_msg(led):
     else:
         print('mate the wrong parameter is being given')
 
-    #dataToSend = {"leds":[led1State,led2State]}
     dataToSend=json.dumps({"leds":[led1State,led2State]})
-    print(dataToSend)
+    print("data: " + dataToSend)
     mqttc.publish(snd_topic, dataToSend)
 
 io.add_event_detect(btn1,io.FALLING,callback=lambda *a: snd_msg(1),bouncetime=500)
@@ -102,10 +101,6 @@ def main():
     try:
         while True:
             init_leds(leds)
-            #dataToSend = "tmp";
-            #mqttc.publish(snd_topic, str(dataToSend))
-            #sleep(1*60)
-            #mqttc.loop() #ASK TEACHER
     except KeyboardInterrupt:
         pass
     finally:
