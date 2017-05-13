@@ -20,6 +20,8 @@ io.setmode(io.BCM)
 io.setup(btn1, io.IN)
 io.setup(btn2, io.IN)
 io.setup(btnMaster, io.IN)
+io.setup(led1, io.OUT)
+io.setup(led2, io.OUT)
 
 ############### MQTT section ##################
 
@@ -65,9 +67,9 @@ mqttc.connect(Broker, 1883, 60) #last could be a port too
 mqttc.loop_start() #client.loop_forever()
 
 ############### led&button section ##################
-def init_leds(leds):
-    io.setmode(io.BCM)
-    io.setup(leds, io.OUT)
+#def init_leds(leds):
+#    io.setmode(io.BCM)
+#    io.setup(leds, io.OUT)
 
 def set_leds(leds, states):
     print("leds and states: " + str(leds) + " " + str(states))
@@ -101,7 +103,7 @@ io.add_event_detect(btn2,io.FALLING,callback=lambda *a: snd_msg(2),bouncetime=50
 def main():
     try:
         while True:
-            init_leds(leds)
+            #init_leds(leds)
     except KeyboardInterrupt:
         pass
     finally:
