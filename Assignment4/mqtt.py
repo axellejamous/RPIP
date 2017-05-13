@@ -35,6 +35,7 @@ def on_connect(mqttc, obj, flags, rc):
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
+    print("sub")
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     try:
         p = msg.payload.decode("utf-8")
