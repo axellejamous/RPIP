@@ -8,7 +8,7 @@ GPIO.setup(4, GPIO.IN)
 def printer():
     print("button pushed successfully")
 
-GPIO.add_event_detect(4,GPIO.FALLING,callback=printer(),bouncetime=500)
+GPIO.add_event_detect(4,GPIO.FALLING,callback=printer,bouncetime=500)
 
 try:
     while True:
