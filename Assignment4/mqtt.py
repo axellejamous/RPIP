@@ -12,13 +12,13 @@ btnMaster = 4 #green
 led1 = 14 #red
 led2 = 15 #yellow
 leds = (led1, led2)
-led1State = led2State = false;
+led1State = led2State = False;
 
 #GPIO.setwarnings(False)
-GPIO.setmode(io.BCM)
-GPIO.setup(btn1, io.IN)
-GPIO.setup(btn2, io.IN)
-GPIO.setup(btnMaster, io.IN)
+io.setmode(io.BCM)
+io.setup(btn1, io.IN)
+io.setup(btn2, io.IN)
+io.setup(btnMaster, io.IN)
 
 ############### MQTT section ##################
 
@@ -68,7 +68,7 @@ def init_leds(leds):
     io.setup(leds, io.OUT)
 
 def set_leds(leds, states):
-    GPIO.output(leds, states)  #Turn OFF LED
+    io.output(leds, states)  #Turn OFF LED
 
 def snd_msg(led):
     global led1State
@@ -79,7 +79,7 @@ def snd_msg(led):
     elif led==2:
         led2State = not led2State
     elif led==3:
-        led1State = led2State = false
+        led1State = led2State = False
     else:
         print('mate the wrong parameter is being given')
 
