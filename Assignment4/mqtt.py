@@ -101,7 +101,6 @@ def main():
     try:
         while True:
             init_leds(leds)
-            mqttc.loop()
     except KeyboardInterrupt:
         pass
     finally:
