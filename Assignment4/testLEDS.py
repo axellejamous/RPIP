@@ -3,7 +3,12 @@ from time import sleep
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(23, GPIO.OUT)
 GPIO.setup(24, GPIO.OUT)
+GPIO.setup(4, GPIO.IN)
 
+def printer():
+    print("button pushed successfully")
+
+io.add_event_detect(4,io.FALLING,callback=printer(),bouncetime=500)
 
 try:
     while True:
