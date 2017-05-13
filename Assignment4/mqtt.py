@@ -104,8 +104,6 @@ def main():
     try:
         while True:
             init_leds(leds)
-            dataToSend = "tmp";
-            mqttc.publish(snd_topic, str(dataToSend))
     except KeyboardInterrupt:
         pass
     finally:
