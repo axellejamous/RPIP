@@ -70,6 +70,7 @@ def init_leds(leds):
     io.setup(leds, io.OUT)
 
 def set_leds(leds, states):
+    print("leds and states: " + str(leds) + " " + str(states))
     io.output(leds, states)  #Turn OFF LED
 
 def snd_msg(led):
