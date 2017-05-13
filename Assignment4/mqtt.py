@@ -88,9 +88,9 @@ def snd_msg(led):
     dataToSend=json.dumps({"leds":[led1State,led2State]})
     mqttc.publish(snd_topic, dataToSend)
 
-io.add_event_detect(btn1,io.FALLING,callback=snd_msg(1),bouncetime=500)
-io.add_event_detect(btn2,io.FALLING,callback=snd_msg(2),bouncetime=500)
-io.add_event_detect(btnMaster,io.FALLING,callback=snd_msg(3),bouncetime=500)
+io.add_event_detect(btn1,io.FALLING,callback=lambda *a: snd_msg(1),bouncetime=500)
+io.add_event_detect(btn2,io.FALLING,callback=lambda *a: snd_msg(2),bouncetime=500)
+io.add_event_detect(btnMaster,io.FALLING,callback=lambda *a: snd_msg(3),bouncetime=500)
 
 ############### main ##################
 
