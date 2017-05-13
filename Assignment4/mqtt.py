@@ -89,7 +89,6 @@ def snd_msg(led):
     else:
         print('mate the wrong parameter is being given')
 
-    #dataToSend = {"leds":[led1State,led2State]}
     dataToSend=json.dumps({"leds":[led1State,led2State]})
     print("data: " + dataToSend)
     mqttc.publish(snd_topic, dataToSend)
