@@ -38,7 +38,7 @@ def on_message(mqttc, obj, msg):
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     try:
         p = msg.payload.decode("utf-8")
-        print(p)
+        print("decoded payload: " + p)
         x = json.loads(p)
         set_leds(leds, tuple(x['leds'])) #set leds to received value
 
