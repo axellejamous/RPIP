@@ -84,9 +84,8 @@ def snd_msg(led):
         print('mate the wrong parameter is being given')
 
     #dataToSend = {"leds":[led1State,led2State]}
-    MqttMessage message = new MqttMessage();
-    message.setPayload("{'leds':[led1State,led2State]}".getBytes(StandardCharsets.UTF_8));
-    mqttc.publish(snd_topic, message)
+    dataToSend=json.dumps({"leds":[led1State,led2State]})
+    mqttc.publish(snd_topic, dataToSend)
 
 io.add_event_detect(btn1,io.FALLING,callback=snd_msg(1),bouncetime=500)
 io.add_event_detect(btn2,io.FALLING,callback=snd_msg(2),bouncetime=500)
