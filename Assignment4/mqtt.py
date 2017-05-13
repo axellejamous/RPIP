@@ -48,7 +48,7 @@ def on_message(mqttc, obj, msg):
 
 # callback functie voor publish  event
 def on_publish(mqttc, obj, mid):
-#    print("mid: "+str(mid))
+    print(mqttc.payload)
     return
 
 # callback functie voor subscribe event
@@ -90,7 +90,7 @@ def snd_msg(led):
 
     #dataToSend = {"leds":[led1State,led2State]}
     dataToSend=json.dumps({"leds":[led1State,led2State]})
-    print(dataToSend)
+    print("data: " + dataToSend)
     mqttc.publish(snd_topic, dataToSend)
 
 io.add_event_detect(btn1,io.FALLING,callback=lambda *a: snd_msg(1),bouncetime=500)
