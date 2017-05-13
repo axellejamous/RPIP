@@ -15,7 +15,7 @@ led2 = 15 #yellow
 leds = (led1, led2)
 led1State = led2State = False;
 
-#GPIO.setwarnings(False)
+io.setwarnings(False)
 io.setmode(io.BCM)
 io.setup(btn1, io.IN)
 io.setup(btn2, io.IN)
