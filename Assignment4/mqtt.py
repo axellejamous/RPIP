@@ -10,8 +10,8 @@ import paho.mqtt.publish as publish
 btn1 = 2 #red
 btn2 = 3 #yellow
 btnMaster = 18 #green
-led1 = 14 #red
-led2 = 15 #yellow
+led1 = 23 #red
+led2 = 24 #yellow
 leds = (led1, led2)
 led1State = led2State = False;
 
@@ -70,7 +70,7 @@ def init_leds(leds):
 
 def set_leds(leds, states):
     print("leds and states: " + str(leds) + " " + str(states))
-    io.output(leds, states)  #Turn OFF LED
+    io.output(leds, states)
 
 def snd_msg(led):
     global led1State
