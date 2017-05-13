@@ -48,7 +48,7 @@ def on_message(mqttc, obj, msg):
 
 # callback functie voor publish  event
 def on_publish(mqttc, obj, mid):
-    print("mid: "+str(mid))
+#    print("mid: "+str(mid))
 
 # callback functie voor subscribe event
 def on_subscribe(mqttc, obj, mid, granted_qos):
@@ -74,7 +74,7 @@ def set_leds(leds, states):
 def snd_msg(led):
     global led1State
     global led2State
-
+	
     if led==1:
         led1State = not led1State
     elif led==2:
