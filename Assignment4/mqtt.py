@@ -49,6 +49,7 @@ def on_message(mqttc, obj, msg):
 # callback functie voor publish  event
 def on_publish(mqttc, obj, mid):
 #    print("mid: "+str(mid))
+    return
 
 # callback functie voor subscribe event
 def on_subscribe(mqttc, obj, mid, granted_qos):
