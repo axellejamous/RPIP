@@ -20,6 +20,7 @@ io.setmode(io.BCM)
 io.setup(btn1, io.IN)
 io.setup(btn2, io.IN)
 io.setup(btnMaster, io.IN)
+io.setup(24, io.OUT)
 
 ############### MQTT section ##################
 
@@ -71,7 +72,7 @@ def init_leds(leds):
 def set_leds(leds, states):
     print("leds and states: " + str(leds) + " " + str(states))
     io.output(leds, states)
-    io.output(led2,1)
+    io.output(24, 1)
 
 def snd_msg(led):
     global led1State
