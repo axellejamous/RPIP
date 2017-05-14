@@ -1,8 +1,0 @@
-http://stackoverflow.com/questions/37006863/python-mqtt-script-on-raspberry-pi-to-send-and-receive-messages
-
-http://www.ev3dev.org/docs/tutorials/sending-and-receiving-messages-with-mqtt/
-
-https://learn.adafruit.com/diy-esp8266-home-security-with-lua-and-mqtt/configuring-mqtt-on-the-raspberry-pi
-
-https://luytsm.github.io/rpip-cursus/slides/les3_mqtt.html
-https://luytsm.github.io/rpip-cursus/labs/lab4_mqtt.html
