@@ -5,6 +5,9 @@ from time import sleep
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 
+############## author ############################
+# Axelle Jamous & Stijn Pittomvils 2EA1
+
 ############### gpio in/outputs ##################
 
 btn1 = 2 #red
@@ -25,13 +28,13 @@ io.setup(btnMaster, io.IN)
 
 Broker = "192.168.1.10"
 
-rcv_topic = "home/groundfloor/livingroom/lights/lightx"    # receive messages on this topic
-snd_topic = "home/groundfloor/kitchen/lights/lightx"       # send messages to this topic
+rcv_topic = "home/groundfloor/livingroom/lights/lightx" #subscribe to messages on this topic
+snd_topic = "home/groundfloor/kitchen/lights/lightx" #publish messages to this topic
 
 #when connecting:
 def on_connect(mqttc, obj, flags, rc):
     print("rc: "+str(rc))
-    mqttc.subscribe(rcv_topic) #receving/subscriber
+    mqttc.subscribe(rcv_topic) #sub
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
@@ -47,12 +50,12 @@ def on_message(mqttc, obj, msg):
     except Exception as e:
         print(e)
 
-# callback functie voor publish  event
+#when publishing:
 def on_publish(mqttc, obj, mid):
-    print("pub")
+    print("publishing")
     return
 
-# callback functie voor subscribe event
+#when subscribing:
 def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
@@ -61,8 +64,8 @@ mqttc.on_message = on_message
 mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_subscribe = on_subscribe
-mqttc.connect(Broker, 1883, 60) #last could be a port too
-mqttc.loop_start() #client.loop_forever()
+mqttc.connect(Broker, 1883, 60)
+mqttc.loop_start() #or client.loop_forever()
 
 ############### led&button section ##################
 def init_leds(leds):
