@@ -2,9 +2,9 @@ import doorAlarm as alarm
 
 def main():
 	try:
-		alarm.cleanupTool()
+	        alarm.cleanupTool()
 	except KeyboardInterrupt:
-    	print("Closing.")
+    	        print("Closing.")
 	else:
 		pass
 	finally:
