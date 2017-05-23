@@ -48,11 +48,11 @@ def cleanupTool():
                 lines.remove(line)
 
     #Write changes to the file:
-    #logFile=open("logFile.txt","w")
-    #logFile.write("".join(lines))
-    #logFile.close()
+    logFile=open("timeFile.txt","w")
+    logFile.write("".join(lines))
+    logFile.close()
     print("Writing changes to file.")
-    writeFile("timeFile.txt","".join(lines))
+    #writeFile("timeFile.txt","".join(lines))
 
 def readFile(fileName):
     #read file line per line w timestamps
