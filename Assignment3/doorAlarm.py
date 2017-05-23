@@ -23,9 +23,6 @@ start = end = 0
 #cleanuptool function to be imported
 def cleanupTool():
     #read all lines in the file then close it
-    #logFile=open("logFile.txt","r")
-    #lines=file.readlines()
-    #logFile.close()
     lines = readFile("timeFile.txt")
 
     #Offer user two modes in which he can cleanup the file
@@ -48,9 +45,6 @@ def cleanupTool():
                 lines.remove(line)
 
     #Write changes to the file:
-    #logFile=open("timeFile.txt","w")
-    #logFile.write("".join(lines))
-    #logFile.close()
     print("Writing changes to file.")
     writeFile("timeFile.txt","".join(lines))
 
