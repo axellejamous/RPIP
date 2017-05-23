@@ -80,7 +80,8 @@ def timerCallback():
         globBtnState = 0
     elif elapsed>=5:
         globBtnState = 1
-        
+        print("Button pressed longer than 5s - alarm off")
+
 GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
 
 def main():
