@@ -33,6 +33,7 @@ def cleanupTool():
     if(mode=="1"):
         print("Cleaning line per line")
         for line in list(lines):
+            print(line)
             rm=input("Do you want to remove this line? (y)")
             if(rm=="y"):
                 lines.remove(line)
