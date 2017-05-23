@@ -64,7 +64,7 @@ def writeFile(fileName, stringToFile):
     f.write(stringToFile)
     f.close()
 
-def timerCallback():
+def timerCallback(self):
     global start
     global end
     global globBtnState
