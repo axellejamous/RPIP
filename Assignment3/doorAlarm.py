@@ -48,11 +48,11 @@ def cleanupTool():
                 lines.remove(line)
 
     #Write changes to the file:
-    logFile=open("timeFile.txt","w")
-    logFile.write("".join(lines))
-    logFile.close()
+    #logFile=open("timeFile.txt","w")
+    #logFile.write("".join(lines))
+    #logFile.close()
     print("Writing changes to file.")
-    #writeFile("timeFile.txt","".join(lines))
+    writeFile("timeFile.txt","".join(lines))
 
 def readFile(fileName):
     #read file line per line w timestamps
@@ -61,8 +61,13 @@ def readFile(fileName):
     f.close()
     return lines
 
-def writeFile(fileName, stringToFile):
+def appendFile(fileName, stringToFile):
     f = open(os.path.join(__location__, fileName), "a")
+    f.write(stringToFile)
+    f.close()
+
+def writeFile(fileName, stringToFile):
+    f = open(os.path.join(__location__, fileName), "w")
     f.write(stringToFile)
     f.close()
 
@@ -108,7 +113,7 @@ def main():
         #first time alarm starts going off
         if globFlag==0:
             #output time to file
-            writeFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
+            appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
             #set flag to on
             globFlag = 1
 
