@@ -94,6 +94,8 @@ def main():
         #set flag back to 0 for time
         globFlag = 0
         globLedState = False
+        #reset alarmled
+        globBtnState = 0
         print("Door closed " + str(i))
         GPIO.output(LED, globLedState)  #Turn OFF LED
         sleep(0.1)
@@ -105,11 +107,8 @@ def main():
         if globFlag==0:
             #output time to file
             writeFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
-            #reset alarmled
-            globBtnState = 0
             #set flag to on
             globFlag = 1
-
 
         if globBtnState == 0:
             globLedState = not globLedState
