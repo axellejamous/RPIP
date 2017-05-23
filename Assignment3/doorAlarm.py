@@ -17,6 +17,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 #global
 globFlag = 0
 globLedState = False
+globBtnState = 0
 start = end = 0
 
 #cleanuptool function to be imported
@@ -66,16 +67,21 @@ def writeFile(fileName, stringToFile):
 def timerCallback():
     global start
     global end
+    global globBtnState
+
     if GPIO.input(BTN) == 1:
         start = time()
     if GPIO.input(BTN) == 0:
         end = time()
         elapsed = end - start
         #print(elapsed)
-    return elapsed
 
-# only add the detection call once!
-GPIO.add_event_detect(BTN, GPIO.BOTH)
+    if elapsed<5:
+        globBtnState = 0
+    elif elapsed>=5:
+        globBtnState = 1
+        
+GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
 
 def main():
     global globFlag
@@ -101,17 +107,12 @@ def main():
             globFlag = 1
 
 
-        if GPIO.event_detected(BTN):
-            elapsed = timerCallback()
-
-            if elapsed<5:
-                globLedState = not globLedState
-                GPIO.output(LED, globLedState)  #Turn ON LED
-            elif elapsed>=5:
-                globLedState = False
-                GPIO.output(LED, globLedState)  #Turn ON LED
-
-        #sleep(0.1)
+        if globBtnState == 0:
+            globLedState = not globLedState
+            GPIO.output(LED, globLedState)  #Turn ON LED
+        elif globBtnState == 1:
+            globLedState = False
+            GPIO.output(LED, globLedState)  #Turn ON LED
 
 #toplevel script
 #below will only execute if ran directly - above is always accessible
