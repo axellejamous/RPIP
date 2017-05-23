@@ -51,6 +51,7 @@ def cleanupTool():
     #logFile=open("logFile.txt","w")
     #logFile.write("".join(lines))
     #logFile.close()
+    print("Writing changes to file.")
     writeFile("timeFile.txt","".join(lines))
 
 def readFile(fileName):
