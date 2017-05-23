@@ -87,6 +87,7 @@ GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
 def main():
     global globFlag
     global globLedState
+    global globBtnState
 
     i=GPIO.input(IRS)
     if i==0:                 #When output from motion sensor is LOW
@@ -104,6 +105,8 @@ def main():
         if globFlag==0:
             #output time to file
             writeFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
+            #reset alarmled
+            globBtnState = 0
             #set flag to on
             globFlag = 1
 
