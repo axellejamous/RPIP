@@ -78,7 +78,7 @@ def timerCallback():
 GPIO.add_event_detect(BTN, GPIO.BOTH)
 
 def main():
-    if GPIO.event_detected():
+    if GPIO.event_detected(BTN):
         elapsed = timerCallback()
 
     global globFlag
