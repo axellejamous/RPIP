@@ -68,7 +68,6 @@ def timerCallback(self):
     global start
     global end
     global globBtnState
-    elapsed = 0
 
     if GPIO.input(BTN) == 1:
         start = time()
