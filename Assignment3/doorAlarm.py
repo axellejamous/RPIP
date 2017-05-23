@@ -78,9 +78,6 @@ def timerCallback():
 GPIO.add_event_detect(BTN, GPIO.BOTH)
 
 def main():
-    if GPIO.event_detected(BTN):
-        elapsed = timerCallback()
-
     global globFlag
     global globLedState
 
@@ -104,12 +101,15 @@ def main():
             globFlag = 1
 
 
-        if elapsed is not None and elapsed<5:
-            globLedState = not globLedState
-            GPIO.output(LED, globLedState)  #Turn ON LED
-        elif elapsed is not None and elapsed >=5:
-            globLedState = False
-            GPIO.output(LED, globLedState)  #Turn ON LED
+        if GPIO.event_detected(BTN):
+            elapsed = timerCallback()
+
+            if elapsed<5:
+                globLedState = not globLedState
+                GPIO.output(LED, globLedState)  #Turn ON LED
+            elif elapsed>=5:
+                globLedState = False
+                GPIO.output(LED, globLedState)  #Turn ON LED
 
         #sleep(0.1)
 
