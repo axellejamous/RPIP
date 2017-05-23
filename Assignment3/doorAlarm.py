@@ -104,10 +104,10 @@ def main():
             globFlag = 1
 
 
-        if elapsed != None && elapsed<5:
+        if elapsed is not None and elapsed<5:
             globLedState = not globLedState
             GPIO.output(LED, globLedState)  #Turn ON LED
-        elif elapsed != None && elapsed >=5:
+        elif elapsed is not None and elapsed >=5:
             globLedState = False
             GPIO.output(LED, globLedState)  #Turn ON LED
 
