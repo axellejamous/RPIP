@@ -44,7 +44,7 @@ def cleanupTool():
             dateLine=strptime(line.rstrip("\n"),"%a, %d %b %Y %H:%M:%S")
             if(startdate<=dateLine<=enddate):
                 lines.remove(line)
-    
+
     #Write changes to the file:
     #logFile=open("logFile.txt","w")
     #logFile.write("".join(lines))
@@ -63,7 +63,7 @@ def writeFile(fileName, stringToFile):
     f.write(stringToFile)
     f.close()
 
-def timerCallback(elapsed):
+def timerCallback():
     global start
     global end
     if GPIO.input(BTN) == 1:
@@ -75,15 +75,15 @@ def timerCallback(elapsed):
     return elapsed
 
 # only add the detection call once!
-GPIO.add_event_detect(BTN, GPIO.BOTH) 
+GPIO.add_event_detect(BTN, GPIO.BOTH)
 
 def main():
     if GPIO.event_detected():
-        timerCallback(elapsed)
-        
+        elapsed = timerCallback()
+
     global globFlag
     global globLedState
-    
+
     i=GPIO.input(IRS)
     if i==0:                 #When output from motion sensor is LOW
         #set flag back to 0 for time
@@ -95,14 +95,14 @@ def main():
     #alarm on:
     elif i==1:               #When output from motion sensor is HIGH
         print("Door open " + i)
-        
+
         #first time alarm starts going off
         if globFlag==0:
             #output time to file
             writeFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
             #set flag to on
             globFlag = 1
-    
+
 
         if elapsed<5:
             globLedState = not globLedState
@@ -110,11 +110,11 @@ def main():
         elif elapsed >=5:
             globLedState = False
             GPIO.output(LED, globLedState)  #Turn ON LED
-        
+
         #sleep(0.1)
 
 #toplevel script
-#below will only execute if ran directly - above is always accessible 
+#below will only execute if ran directly - above is always accessible
 if __name__ == '__main__':
     while True:
         try:
