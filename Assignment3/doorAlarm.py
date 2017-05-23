@@ -78,7 +78,7 @@ def timerCallback(elapsed):
 GPIO.add_event_detect(BTN, GPIO.BOTH) 
 
 def main():
-    if GPIO.event_detected(channel):
+    if GPIO.event_detected():
         timerCallback(elapsed)
         
     global globFlag
@@ -89,12 +89,12 @@ def main():
         #set flag back to 0 for time
         globFlag = 0
         globLedState = False
-        print "Door closed",i
+        print("Door closed " + i)
         GPIO.output(LED, globLedState)  #Turn OFF LED
         sleep(0.1)
     #alarm on:
     elif i==1:               #When output from motion sensor is HIGH
-        print "Door open",i
+        print("Door open " + i)
         
         #first time alarm starts going off
         if globFlag==0:
