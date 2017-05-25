@@ -43,11 +43,11 @@ def writeto_file():
         fileFlag = 1
 
 def alarmer():
-    if alarmState == 1:
+    if alarmState == 1: #ALARM ON
         ledState = not ledState
         led.value = ledState #turn on or off led depending on state
 
-    else if alarmState == 0:
+    else if alarmState == 0: #ALARM OFF
         ledState = False
         led.off
 
@@ -71,20 +71,17 @@ distanceBtn.when_pressed = showDistance
 def main():
     global fileFlag, alarmState
 
-    #alarm off:
     ultrasonic.wait_for_out_of_range()
         print("Door closed")
         fileFlag = 0 #reset file flag
         alarmState = 0 #alarm is off
 
-    #alarm on:
     ultrasonic.wait_for_in_range()
         print("Door open")
         writeto_file()
         alarmState = 1
 
     alarmer()
-
 
 #################toplevel script####################
 if __name__ == '__main__':
