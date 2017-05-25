@@ -1,24 +1,20 @@
-import RPi.GPIO as GPIO
 import os
 from time import sleep, strftime, time, strptime
+from gpiozero import DistanceSensor, LED, Button
 
-IRS = 11
-BTN = 5
-LED = 3
+###################declarations#######################
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(IRS, GPIO.IN) #Read output from IR motion sensor
-GPIO.setup(BTN, GPIO.IN)
-GPIO.setup(LED, GPIO.OUT)
+button = Button(5, hold_time=5)
+led = LED(3)
+ultrasonic = DistanceSensor(echo=17, trigger=4) #threshold is set to 0.3m standard
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 #global
-globFlag = 0
-globLedState = False
-globBtnState = 0
-start = end = 0
+fileFlag = btnState = 0
+ledState = False
+
+####################functions#########################
 
 def readFile(fileName):
     #read file line per line w timestamps
@@ -37,65 +33,50 @@ def writeFile(fileName, stringToFile):
     f.write(stringToFile)
     f.close()
 
-def timerCallback(self):
-    global start
-    global end
-    global globBtnState
+def timer(self):
+    global btnState
 
-    if GPIO.input(BTN) == 1:
-        start = time()
-    if GPIO.input(BTN) == 0:
-        end = time()
-        elapsed = end - start
-        #print(elapsed)
+    led.off
+    btnState = 1 #so that it doesn't get triggered in main anymore
 
-    if elapsed<5:
-        globBtnState = 0
-    elif elapsed>=5:
-        globBtnState = 1
-        print("Button pressed longer than 5s - alarm off")
 
-GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
+###################interrupts#######################
+button.when_held = timer
+#button.when_pressed = timer
 
+#####################main###########################
 def main():
-    global globFlag
-    global globLedState
-    global globBtnState
+    global fileFlag, ledState, btnState
 
-    i=GPIO.input(IRS)
-    if i==0:                 #When output from motion sensor is LOW
-        #set flag back to 0 for time
-        globFlag = 0
-        globLedState = False
-        #reset alarmled
-        globBtnState = 0
-        print("Door closed " + str(i))
-        GPIO.output(LED, globLedState)  #Turn OFF LED
-        sleep(0.1)
+    #alarm off:
+    ultrasonic.wait_for_out_of_range()
+        print("Door closed")
+
+        led.off #Turn OFF led
+
+        fileFlag = 0
+        ledState = False #reset alarmled
+        btnState = 0 #reset button press so that the alarm goes off again
+
     #alarm on:
-    elif i==1:               #When output from motion sensor is HIGH
-        print("Door open " + str(i))
-
-        #first time alarm starts going off
-        if globFlag==0:
+    ultrasonic.wait_for_in_range()
+        print("Door open")
+        #first time alarm starts going off, write to file:
+        if fileFlag==0:
             #output time to file
             appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
             #set flag to on
-            globFlag = 1
+            fileFlag = 1
 
-        if globBtnState == 0:
-            globLedState = not globLedState
-            GPIO.output(LED, globLedState)  #Turn ON LED
-        elif globBtnState == 1:
-            globLedState = False
-            GPIO.output(LED, globLedState)  #Turn ON LED
+        if btnState == 0:
+            btnState = not btnState
+            led.value = ledState #turn on or off led depending on state
 
-#toplevel script
-#below will only execute if ran directly - above is always accessible
+#################toplevel script####################
 if __name__ == '__main__':
     while True:
         try:
             main()
         except KeyboardInterrupt:
             print("Closing.")
-            GPIO.cleanup()
+            #CLEANUP IS AUTOMATIC WITH GPIOZERO
