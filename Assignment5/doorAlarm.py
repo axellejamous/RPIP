@@ -13,7 +13,7 @@ ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m stand
 
 #################global declarations##################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-fileFlag = holdState = 0
+fileFlag = alarmState = 0
 ledState = False
 
 ####################functions#########################
@@ -43,20 +43,21 @@ def writeto_file():
         fileFlag = 1
 
 def alarmer():
-    if holdState == 0:
+    if alarmState == 1:
         ledState = not ledState
         led.value = ledState #turn on or off led depending on state
 
+    else if alarmState == 0:
+        ledState = False
+        led.off
+
 def timer():
-    global holdState, ledState
-    led.off
-    ledState = False
-    holdState = 1 #so that it doesn't get triggered in main anymore
+    global alarmState
+    alarmState = 0
 
 def toggler():
-    global holdState
-    holdState = 0
-    alarmer()
+    global alarmState
+    alarmState = not alarmState
 
 def showDistance():
     print("distance: " + str(ultrasonic.distance))
@@ -68,23 +69,21 @@ distanceBtn.when_pressed = showDistance
 
 #####################main###########################
 def main():
-    global fileFlag, ledState, holdState
+    global fileFlag, alarmState
 
     #alarm off:
     ultrasonic.wait_for_out_of_range()
         print("Door closed")
-
-        led.off #Turn OFF led
-
-        fileFlag = holdState = 0 #reset button press so that the alarm goes off again & file write
-        ledState = False #reset alarmled
+        fileFlag = 0 #reset file flag
+        alarmState = 0 #alarm is off
 
     #alarm on:
     ultrasonic.wait_for_in_range()
         print("Door open")
-
         writeto_file()
-        alarmer()
+        alarmState = 1
+
+    alarmer()
 
 
 #################toplevel script####################
