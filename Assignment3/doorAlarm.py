@@ -63,23 +63,24 @@ def timerCallback(self):
     global alarmState
     global previousTime
 
-    ontime = time() - previousTime
-    if ontime > 1 and ontime < 3:
+    pressedTime = time() - previousTime
+    if pressedTime > 1 and pressedTime < 3:
         alarmState = 1
         print("hold")
-    elif ontime > 3:
+    elif pressedTime > 3:
         alarmState = 0
         print("long hold")
-    elif ontime > 0.01:
+    elif pressedTime > 0.01:
         alarmState = 1
         print("click")
     else:
-        print("ignore")
+        print("ignore" + pressedTime)
 
 def main():
     global fileFlag, alarmState, previousTime
 
-    previousTime = time()
+    if GPIO.input(BTN) == 1:
+        previousTime = time()
 
     i=GPIO.input(IRS) #read infrared sensor output
     if i==0:
@@ -95,7 +96,7 @@ def main():
     alarm()
 
 ##############################listeners/interrupts##############################
-GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
+GPIO.add_event_detect(BTN, GPIO.FALLING, callback=timerCallback, bouncetime=200)
 
 
 ##############################toplevel script##############################
