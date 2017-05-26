@@ -1,7 +1,10 @@
 import RPi.GPIO as GPIO
 import os
-from time import strftime, time, sleep
+from time import strftime, time
 
+######################Axelle Jamous 2EA1#########################
+
+##############################setup##############################
 IRS = 11
 BTN = 5
 LED = 3
@@ -12,15 +15,15 @@ GPIO.setup(IRS, GPIO.IN) #Read output from IR motion sensor
 GPIO.setup(BTN, GPIO.IN)
 GPIO.setup(LED, GPIO.OUT)
 
+##############################declarations##############################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-#global
 fileFlag = 0
 alarmState = 0
 ledState = False
 start = end = elapsed = 0
 
-
+##############################functions##############################
 def readFile(fileName):
     #read file line per line w timestamps
     f = open(os.path.join(__location__, fileName), "r")
@@ -55,6 +58,7 @@ def alarm():
         ledState = False
 
     GPIO.output(LED, ledState) #write change to led
+    sleep(0.1)
 
 def timerCallback(self):
     global start, end, alarmState, elapsed
@@ -73,18 +77,14 @@ def timerCallback(self):
         alarmState = 0
         print("Button pressed longer than 5s - alarm off")
 
-GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
-
 def main():
     global fileFlag, alarmState
 
     i=GPIO.input(IRS) #read infrared sensor output
-    print(i)
     if i==0:
         fileFlag = 0
         alarmState = 0
 #       print("Door closed " + str(i))
-        #sleep(0.1)
 
     elif i==1:
         timeToFile()
@@ -93,8 +93,11 @@ def main():
 
     alarm()
 
+##############################listeners/interrupts##############################
+GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
 
-#toplevel script
+
+##############################toplevel script##############################
 if __name__ == '__main__':
     while True:
         try:
