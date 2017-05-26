@@ -79,7 +79,6 @@ def main():
 
     i=GPIO.input(IRS) #read infrared sensor output
     if i==0:
-        print("hey")
 #       print("Door closed " + str(i))
         fileFlag = 0
         alarmState = 0
