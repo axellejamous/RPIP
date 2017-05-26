@@ -79,6 +79,7 @@ def timerCallback(self):
 
     if elapsed<5:
         globBtnState = 0
+        print("yeh")
     elif elapsed>=5:
         globBtnState = 1
         print("Button pressed longer than 5s - alarm off")
@@ -97,12 +98,12 @@ def main():
         globLedState = False
         #reset alarmled
         globBtnState = 0
-        print("Door closed " + str(i))
+#       print("Door closed " + str(i))
         GPIO.output(LED, globLedState)  #Turn OFF LED
         sleep(0.1)
     #alarm on:
     elif i==1:               #When output from motion sensor is HIGH
-        print("Door open " + str(i))
+#        print("Door open " + str(i))
 
         #first time alarm starts going off
         if globFlag==0:
