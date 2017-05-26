@@ -41,6 +41,7 @@ def writeFile(fileName, stringToFile):
 def timeToFile():
     #writes the time that the alarm was triggered to a timeFile.txt
     global fileFlag
+    print("hi")
 
     if fileFlag==0:
         fileFlag = 1 #tell the program that the first time has passed
