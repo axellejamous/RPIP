@@ -44,6 +44,7 @@ def timeToFile():
 
     if fileFlag==0:
         fileFlag = 1 #tell the program that the first time has passed
+        print("fileFlag: " + str(fileFlag))
         appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
 
 def alarm():
@@ -83,7 +84,6 @@ def main():
     if i==0: #output is LOW
 #       print("Door closed " + str(i))
         fileFlag = 0
-        print("fileFlag: " + str(fileFlag))
         alarmState = 0
         print(i)
 
