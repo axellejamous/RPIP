@@ -21,7 +21,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 fileFlag = 0
 alarmState = 0
 ledState = False
-start = end = elapsed = 0
+previousTime = 0
 
 ##############################functions##############################
 def readFile(fileName):
@@ -60,24 +60,26 @@ def alarm():
     GPIO.output(LED, ledState) #write change to led
 
 def timerCallback(self):
-    global start, end, alarmState, elapsed
+    global alarmState
+    global previousTime
 
-    if GPIO.input(BTN) == 1:
-        start = time()
-    if GPIO.input(BTN) == 0:
-        end = time()
-        elapsed = end - start
-        print(elapsed)
-
-    if elapsed<5:
+    ontime = time.time() - previousTime
+    if ontime > 1 and ontime < 3:
         alarmState = 1
-        print("alarm on, elapsed: " + str(elapsed))
-    elif elapsed>=5:
+        print "hold"
+    elif ontime > 3:
         alarmState = 0
-        print("Button pressed longer than 5s - alarm off")
+        print "long hold"
+    elif ontime > 0.01:
+        alarmState = 1
+        print "click"
+    else:
+        print "ignore"
 
 def main():
-    global fileFlag, alarmState
+    global fileFlag, alarmState, previousTime
+
+    previousTime = time.time()
 
     i=GPIO.input(IRS) #read infrared sensor output
     if i==0:
