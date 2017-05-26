@@ -39,12 +39,12 @@ def writeFile(fileName, stringToFile):
     f.close()
 
 def timeToFile():
+    print('hello')
     #writes the time that the alarm was triggered to a timeFile.txt
     global fileFlag
 
     if fileFlag==0:
         fileFlag = 1 #tell the program that the first time has passed
-        print("fileFlag: " + str(fileFlag))
         appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
 
 def alarm():
