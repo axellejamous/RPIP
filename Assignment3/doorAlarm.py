@@ -84,13 +84,14 @@ def main():
 #       print("Door closed " + str(i))
         fileFlag = 0
         alarmState = 0
+        print(i)
 
     elif i==1: #output is HIGH
 #       print("Door open " + str(i))
         timeToFile()
         alarmState = 1
-        print("fileFlag: " + str(fileFlag))
-
+        #print("fileFlag: " + str(fileFlag))
+        print(i)
     alarm()
 
 
