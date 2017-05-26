@@ -86,7 +86,7 @@ def main():
         alarmState = 0
 #       print("Door closed " + str(i))
 
-    elif i==1:
+    elif i==14:
         timeToFile()
         alarmState = 1
 #       print("Door open " + str(i))
