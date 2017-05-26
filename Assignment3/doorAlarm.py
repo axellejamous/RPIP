@@ -41,7 +41,6 @@ def writeFile(fileName, stringToFile):
 def timeToFile():
     #writes the time that the alarm was triggered to a timeFile.txt
     global fileFlag
-    print("hi")
 
     if fileFlag==0:
         fileFlag = 1 #tell the program that the first time has passed
@@ -61,18 +60,18 @@ def timerCallback(self):
     global start, end, alarmState
 
     if GPIO.input(BTN) == 1:
-        start = time()
         elapsed = 0
+        start = time()
     if GPIO.input(BTN) == 0:
         end = time()
         elapsed = end - start
         print(elapsed)
 
     if elapsed<5:
-        globBtnState = 0
+        alarmState = 1
         print("alarm on, elapsed: " + str(elapsed))
     elif elapsed>=5:
-        globBtnState = 1
+        alarmState = 0
         print("Button pressed longer than 5s - alarm off")
 
 GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
