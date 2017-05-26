@@ -63,7 +63,7 @@ def timerCallback(self):
     global alarmState
     global previousTime
 
-    ontime = time.time() - previousTime
+    ontime = time() - previousTime
     if ontime > 1 and ontime < 3:
         alarmState = 1
         print("hold")
@@ -79,7 +79,7 @@ def timerCallback(self):
 def main():
     global fileFlag, alarmState, previousTime
 
-    previousTime = time.time()
+    previousTime = time()
 
     i=GPIO.input(IRS) #read infrared sensor output
     if i==0:
