@@ -43,8 +43,8 @@ def timeToFile():
     global fileFlag
 
     if fileFlag==0:
-        appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
         fileFlag = 1 #tell the program that the first time has passed
+        appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
 
 def alarm():
     global alarmState, ledState
@@ -89,7 +89,9 @@ def main():
 #       print("Door open " + str(i))
         timeToFile()
         alarmState = 1
+        print("fileFlag: " + str(fileFlag))
 
+    print("fileFlag: " + str(fileFlag))
     alarm()
 
 
