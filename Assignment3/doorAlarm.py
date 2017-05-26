@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import os
-from time import sleep, strftime, time, strptime
+from time import strftime, time
 
 IRS = 11
 BTN = 5
@@ -15,38 +15,10 @@ GPIO.setup(LED, GPIO.OUT)
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 #global
-globFlag = 0
-globLedState = False
-globBtnState = 0
+fileFlag = 0
+alarmState = 0
 start = end = 0
 
-#cleanuptool function to be imported
-def cleanupTool():
-    #read all lines in the file then close it
-    lines = readFile("timeFile.txt")
-
-    #Offer user two modes in which he can cleanup the file
-    mode=input("Type 1 to clean up line per line, type 2 to clean up a certain range: ")
-    if(mode=="1"):
-        print("Cleaning line per line")
-        for line in list(lines):
-            print(line)
-            rm=input("Do you want to remove this line? (y)")
-            if(rm=="y"):
-                lines.remove(line)
-    elif(mode=="2"):
-        print("".join(lines))
-        startdate=time.strptime(input("Select start date to remove"),"%a, %d %b %Y %H:%M:%S")
-        enddate=time.strptime(input("Select end date to remove"),"%a, %d %b %Y %H:%M:%S")
-        print("Start: " + startdate + " End: " + enddate)
-        for line in list(lines):
-            dateLine=strptime(line.rstrip("\n"),"%a, %d %b %Y %H:%M:%S")
-            if(startdate<=dateLine<=enddate):
-                lines.remove(line)
-
-    #Write changes to the file:
-    print("Writing changes to file.")
-    writeFile("timeFile.txt","".join(lines))
 
 def readFile(fileName):
     #read file line per line w timestamps
@@ -65,21 +37,39 @@ def writeFile(fileName, stringToFile):
     f.write(stringToFile)
     f.close()
 
+def timeToFile():
+    #writes the time that the alarm was triggered to a timeFile.txt
+    global fileFlag
+
+    if fileFlag==0:
+        appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
+        fileFlag = 1 #tell the program that the first time has passed
+
+def alarm():
+    global alarmState
+    ledState = False
+
+    if alarmState == 1: #alarm on
+        ledState = not ledState
+    elif alarmState == 0: #alarm off
+        ledState = False
+
+    GPIO.output(LED, ledState) #write change to led
+
 def timerCallback(self):
-    global start
-    global end
-    global globBtnState
+    global start, end, alarmState
 
     if GPIO.input(BTN) == 1:
         start = time()
+        elapsed = 0
     if GPIO.input(BTN) == 0:
         end = time()
         elapsed = end - start
-        #print(elapsed)
+        print(elapsed)
 
     if elapsed<5:
         globBtnState = 0
-        print("yeh")
+        print("alarm on, elapsed: " + str(elapsed))
     elif elapsed>=5:
         globBtnState = 1
         print("Button pressed longer than 5s - alarm off")
@@ -87,40 +77,22 @@ def timerCallback(self):
 GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
 
 def main():
-    global globFlag
-    global globLedState
-    global globBtnState
+    global fileFlag, alarmState
 
-    i=GPIO.input(IRS)
-    if i==0:                 #When output from motion sensor is LOW
-        #set flag back to 0 for time
-        globFlag = 0
-        globLedState = False
-        #reset alarmled
-        globBtnState = 0
+    i=GPIO.input(IRS) #read infrared sensor output
+    if i==0: #output is LOW
 #       print("Door closed " + str(i))
-        GPIO.output(LED, globLedState)  #Turn OFF LED
-        sleep(0.1)
-    #alarm on:
-    elif i==1:               #When output from motion sensor is HIGH
-#        print("Door open " + str(i))
+        fileFlag = alarmState = 0
 
-        #first time alarm starts going off
-        if globFlag==0:
-            #output time to file
-            appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
-            #set flag to on
-            globFlag = 1
+    elif i==1: #output is HIGH
+#       print("Door open " + str(i))
+        timeToFile()
+        alarmState = 1
 
-        if globBtnState == 0:
-            globLedState = not globLedState
-            GPIO.output(LED, globLedState)  #Turn ON LED
-        elif globBtnState == 1:
-            globLedState = False
-            GPIO.output(LED, globLedState)  #Turn ON LED
+    alarm()
+
 
 #toplevel script
-#below will only execute if ran directly - above is always accessible
 if __name__ == '__main__':
     while True:
         try:
