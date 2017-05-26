@@ -63,7 +63,7 @@ def alarm():
 def timerCallback(self):
     global alarmState, btnDown, btnUpTime
 
-	if(GPIO.input(BTN)):
+    if(GPIO.input(BTN)):
         print("Rising edge detected")
         btnUpTime=millis()
         btnDown=True
