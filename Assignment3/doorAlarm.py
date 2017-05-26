@@ -81,12 +81,13 @@ def main():
     global fileFlag, alarmState
 
     i=GPIO.input(IRS) #read infrared sensor output
+    print(i)
     if i==0:
         fileFlag = 0
         alarmState = 0
 #       print("Door closed " + str(i))
 
-    elif i==14:
+    elif i==1:
         timeToFile()
         alarmState = 1
 #       print("Door open " + str(i))
