@@ -39,7 +39,6 @@ def writeFile(fileName, stringToFile):
     f.close()
 
 def timeToFile():
-    print('hello')
     #writes the time that the alarm was triggered to a timeFile.txt
     global fileFlag
 
@@ -81,6 +80,7 @@ def main():
     global fileFlag, alarmState
 
     i=GPIO.input(IRS) #read infrared sensor output
+    print(i)
     if i==0: #output is LOW
 #       print("Door closed " + str(i))
         fileFlag = 0
