@@ -83,6 +83,7 @@ def main():
     if i==0: #output is LOW
 #       print("Door closed " + str(i))
         fileFlag = 0
+        print("fileFlag: " + str(fileFlag))
         alarmState = 0
         print(i)
 
