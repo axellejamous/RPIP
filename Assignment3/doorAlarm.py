@@ -17,6 +17,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 #global
 fileFlag = 0
 alarmState = 0
+ledState = False
 start = end = 0
 
 
@@ -46,8 +47,7 @@ def timeToFile():
         fileFlag = 1 #tell the program that the first time has passed
 
 def alarm():
-    global alarmState
-    ledState = False
+    global alarmState, ledState
 
     if alarmState == 1: #alarm on
         ledState = not ledState
@@ -82,7 +82,8 @@ def main():
     i=GPIO.input(IRS) #read infrared sensor output
     if i==0: #output is LOW
 #       print("Door closed " + str(i))
-        fileFlag = alarmState = 0
+        fileFlag = 0
+        alarmState = 0
 
     elif i==1: #output is HIGH
 #       print("Door open " + str(i))
