@@ -18,7 +18,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 fileFlag = 0
 alarmState = 0
 ledState = False
-start = end = 0
+start = end = elapsed = 0
 
 
 def readFile(fileName):
@@ -57,10 +57,9 @@ def alarm():
     GPIO.output(LED, ledState) #write change to led
 
 def timerCallback(self):
-    global start, end, alarmState
+    global start, end, alarmState, elapsed
 
     if GPIO.input(BTN) == 1:
-        elapsed = 0
         start = time()
     if GPIO.input(BTN) == 0:
         end = time()
@@ -85,7 +84,7 @@ def main():
         fileFlag = 0
         alarmState = 0
 #       print("Door closed " + str(i))
-        sleep(0.1)
+        #sleep(0.1)
 
     elif i==1:
         timeToFile()
