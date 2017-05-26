@@ -42,7 +42,9 @@ def timeToFile():
     #writes the time that the alarm was triggered to a timeFile.txt
     global fileFlag
 
-
+    if fileFlag==0:
+        fileFlag = 1 #tell the program that the first time has passed
+        appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
 
 def alarm():
     global alarmState, ledState
@@ -79,16 +81,14 @@ def main():
 
     i=GPIO.input(IRS) #read infrared sensor output
     if i==0:
-#       print("Door closed " + str(i))
         fileFlag = 0
         alarmState = 0
+#       print("Door closed " + str(i))
 
     elif i==1:
-#       print("Door open " + str(i))
+        timeToFile()
         alarmState = 1
-        if fileFlag==0:
-            fileFlag = 1 #tell the program that the first time has passed
-            appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
+#       print("Door open " + str(i))
 
     alarm()
 
