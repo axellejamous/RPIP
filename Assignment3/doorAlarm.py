@@ -66,15 +66,15 @@ def timerCallback(self):
     ontime = time.time() - previousTime
     if ontime > 1 and ontime < 3:
         alarmState = 1
-        print "hold"
+        print("hold")
     elif ontime > 3:
         alarmState = 0
-        print "long hold"
+        print("long hold")
     elif ontime > 0.01:
         alarmState = 1
-        print "click"
+        print("click")
     else:
-        print "ignore"
+        print("ignore")
 
 def main():
     global fileFlag, alarmState, previousTime
