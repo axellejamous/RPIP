@@ -91,7 +91,6 @@ def main():
         alarmState = 1
         print("fileFlag: " + str(fileFlag))
 
-    print("fileFlag: " + str(fileFlag))
     alarm()
 
 
