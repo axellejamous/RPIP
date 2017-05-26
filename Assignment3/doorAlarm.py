@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import os
-from time import strftime, time
+from time import strftime, time, sleep
 
 IRS = 11
 BTN = 5
@@ -86,6 +86,7 @@ def main():
         fileFlag = 0
         alarmState = 0
 #       print("Door closed " + str(i))
+        sleep(0.1)
 
     elif i==1:
         timeToFile()
