@@ -74,7 +74,7 @@ def timerCallback(self):
         alarmState = 1
         print("click")
     else:
-        print("ignore" + pressedTime)
+        print("ignore" + str(pressedTime))
 
 def main():
     global fileFlag, alarmState, previousTime
