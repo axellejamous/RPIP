@@ -21,7 +21,8 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 fileFlag = 0
 alarmState = 0
 ledState = False
-previousTime = 0
+btnDown = False
+btnUpTime = None
 
 ##############################functions##############################
 def readFile(fileName):
@@ -60,8 +61,18 @@ def alarm():
     GPIO.output(LED, ledState) #write change to led
 
 def timerCallback(self):
-    global alarmState
-    global previousTime
+    global alarmState, btnDown, btnUpTime
+
+	if(GPIO.input(BTN)):
+        print("Rising edge detected")
+        btnUpTime=millis()
+        btnDown=True
+    else:
+        print("Falling edge detected")
+        if(btnDown):
+            if(millis()>=btnUpTime+5000):
+                alarmState=0
+        btnDown=False
 
     pressedTime = time() - previousTime
     if pressedTime > 1 and pressedTime < 3:
@@ -76,11 +87,11 @@ def timerCallback(self):
     else:
         print("ignore" + str(pressedTime))
 
-def main():
-    global fileFlag, alarmState, previousTime
+def millis():
+	return int(round(time()*1000))
 
-    if GPIO.input(BTN) == 1:
-        previousTime = time()
+def main():
+    global fileFlag, alarmState
 
     i=GPIO.input(IRS) #read infrared sensor output
     if i==0:
@@ -96,7 +107,7 @@ def main():
     alarm()
 
 ##############################listeners/interrupts##############################
-GPIO.add_event_detect(BTN, GPIO.FALLING, callback=timerCallback, bouncetime=200)
+GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
 
 
 ##############################toplevel script##############################
