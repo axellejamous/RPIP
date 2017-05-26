@@ -74,19 +74,6 @@ def timerCallback(self):
                 alarmState=0
         btnDown=False
 
-    pressedTime = time() - previousTime
-    if pressedTime > 1 and pressedTime < 3:
-        alarmState = 1
-        print("hold")
-    elif pressedTime > 3:
-        alarmState = 0
-        print("long hold")
-    elif pressedTime > 0.01:
-        alarmState = 1
-        print("click")
-    else:
-        print("ignore" + str(pressedTime))
-
 def millis():
 	return int(round(time()*1000))
 
