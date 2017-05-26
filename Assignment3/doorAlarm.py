@@ -58,7 +58,6 @@ def alarm():
         ledState = False
 
     GPIO.output(LED, ledState) #write change to led
-    sleep(0.1)
 
 def timerCallback(self):
     global start, end, alarmState, elapsed
