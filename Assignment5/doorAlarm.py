@@ -1,8 +1,7 @@
 import os
 from time import strftime
 from gpiozero import DistanceSensor, LED, Button
-import socket
-from slackclient import SlackClient
+import slacker as slack
 
 ######################setup#########################
 toggleBtn = Button(2)
@@ -18,24 +17,6 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 triggerFlag = alarmState = 0
 ledState = False
 
-####################slack setup#######################
-SLACK_TOKEN = 'insert token here' #deleted my token for github but to test place a token here
-slack_client = SlackClient(SLACK_TOKEN)
-user_slack_id = '@axelle' #change this to your own username for testing
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("8.8.8.8",80)) #surf to google dns and see what ip it uses
-ip = s.getsockname()[0]
-s.close()
-
-####################slack functions###################
-def send_msg(channel_id, msg):
-	slack_client.api_call(
-		"chat.postMessage",
-		channel=channel_id,
-		text=msg,
-		username='pythonbot',
-		icon_emoji=':robot_face:'
-	)
 
 ####################functions#########################
 def readFile(fileName):
@@ -59,7 +40,7 @@ def firstTrigger():
     #first time alarm starts going off, write to file:
     if triggerFlag==0:
         appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
-        send_msg('general','hello') #send slack msg
+        slack.send_msg('#general','hello') #send slack msg
 
         triggerFlag = 1 #first time has passed
 
