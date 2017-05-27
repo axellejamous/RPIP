@@ -1,4 +1,5 @@
 import doorAlarm as alarm
+from time import strptime
 
 def cleanupTool():
     #read all lines in the file then close it

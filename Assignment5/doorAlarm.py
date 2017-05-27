@@ -1,6 +1,8 @@
 import os
-from time import sleep, strftime, time, strptime
+from time import strftime
 from gpiozero import DistanceSensor, LED, Button
+import socket
+from slackclient import SlackClient
 
 ######################setup#########################
 toggleBtn = Button(2)
@@ -13,8 +15,27 @@ ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m stand
 
 #################global declarations##################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-fileFlag = alarmState = 0
+triggerFlag = alarmState = 0
 ledState = False
+
+####################slack setup#######################
+SLACK_TOKEN = 'insert token here' #deleted my token for github but to test place a token here
+slack_client = SlackClient(SLACK_TOKEN)
+user_slack_id = '@axelle' #change this to your own username for testing
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8",80)) #surf to google dns and see what ip it uses
+ip = s.getsockname()[0]
+s.close()
+
+####################slack functions###################
+def send_msg(channel_id, msg):
+	slack_client.api_call(
+		"chat.postMessage",
+		channel=channel_id,
+		text=msg,
+		username='pythonbot',
+		icon_emoji=':robot_face:'
+	)
 
 ####################functions#########################
 def readFile(fileName):
@@ -34,13 +55,13 @@ def writeFile(fileName, stringToFile):
     f.write(stringToFile)
     f.close()
 
-def writeto_file():
+def firstTrigger():
     #first time alarm starts going off, write to file:
-    if fileFlag==0:
-        #output time to file
-        appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S")))
-        #set flag to on
-        fileFlag = 1
+    if triggerFlag==0:
+        appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
+        send_msg('general','hello') #send slack msg
+
+        triggerFlag = 1 #first time has passed
 
 def alarmer():
     if alarmState == 1: #ALARM ON
@@ -69,16 +90,16 @@ distanceBtn.when_pressed = showDistance
 
 #####################main###########################
 def main():
-    global fileFlag, alarmState
+    global triggerFlag, alarmState
 
     ultrasonic.wait_for_out_of_range()
         print("Door closed")
-        fileFlag = 0 #reset file flag
+        triggerFlag = 0 #reset file flag
         alarmState = 0 #alarm is off
 
     ultrasonic.wait_for_in_range()
         print("Door open")
-        writeto_file()
+        firstTrigger()
         alarmState = 1
 
     alarmer()
