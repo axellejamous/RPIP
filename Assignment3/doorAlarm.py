@@ -69,6 +69,7 @@ def timerCallback(self):
     print(str(buttonTime))
 
     if buttonTime >= 5:
+        print("hey")
         alarmState = 0
         buttonFlag = 1
 
