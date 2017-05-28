@@ -1,5 +1,5 @@
 import os
-from time import strftime
+from time import strftime, sleep
 from gpiozero import DistanceSensor, LED, Button
 import slacker as slack
 import mqtter as mqtt
@@ -88,6 +88,7 @@ def main():
         alarmState = 1
 
     alarmer()
+    sleep(0.2)
 
 #################toplevel script####################
 if __name__ == '__main__':
