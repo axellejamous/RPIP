@@ -16,7 +16,7 @@ ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m stand
 
 #################global declarations##################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-triggerFlag = alarmState = 0
+triggerFlag = buttonFlag = alarmState = 0
 ledState = False
 
 ####################functions#########################
@@ -41,11 +41,13 @@ def firstTrigger():
     #first time alarm starts going off, write to file:
     if triggerFlag==0:
         appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
-        slack.send_msg('#general','hello') #send slack msg
+        slack.send_msg('#general','Alarm was triggered.') #send slack msg
 
         triggerFlag = 1 #first time has passed
 
 def alarmer():
+    global ledState
+
     if alarmState == 1: #ALARM ON
         ledState = not ledState
         led.value = ledState #turn on or off led depending on state
@@ -58,8 +60,9 @@ def alarmer():
         ledS.off
 
 def timer():
-    global alarmState
+    global alarmState, buttonFlag
     alarmState = 0
+    buttonFlag = 1
 
 def toggler():
     global alarmState
@@ -75,17 +78,18 @@ distanceBtn.when_pressed = showDistance
 
 #####################main###########################
 def main():
-    global triggerFlag, alarmState
+    global triggerFlag, alarmState, buttonFlag
 
     ultrasonic.wait_for_out_of_range()
         print("Door closed")
-        triggerFlag = 0 #reset file flag
+        triggerFlag = buttonFlag = 0 #reset file and button flags
         alarmState = 0 #alarm is off
 
     ultrasonic.wait_for_in_range()
         print("Door open")
         firstTrigger()
-        alarmState = 1
+        if buttonFlag == 0:
+            alarmState = 1
 
     alarmer()
     sleep(0.2)
