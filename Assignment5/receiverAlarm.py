@@ -10,6 +10,53 @@ ledS = LED(15)
 
 #################global declarations##################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+alarmState = distance = 0
+
+############### MQTT section ##################
+Broker = "192.168.1.10"
+
+snd_topic = "home/receiver" #sub to messages on this topic
+rcv_topic = "home/alarmer" #publish messages to this topic
+
+#when receving a message:
+def on_message(mqttc, obj, msg):
+    global alarmState, distance
+
+    print("subscribing.")
+    print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+    try:
+        p = msg.payload.decode("utf-8")
+        print("decoded payload: " + p)
+        valueList = p.split()
+
+        alarmState = valueList[0]
+        distance = valueList[1]
+
+        if valueList[2]: #True
+            firstTrigger()
+
+        return
+    except Exception as e:
+        print(e)
+
+#when subscribing:
+def on_subscribe(mqttc, obj, mid, granted_qos):
+    print("Subscribed: "+str(mid)+" "+str(granted_qos))
+
+############### assign functions to mqtt ###############
+mqttc = mqtt.Client()
+mqttc.on_message = on_message
+mqttc.on_subscribe = on_subscribe
+mqttc.connect(Broker, 1883, 60)
+mqttc.loop_start() #or client.loop_forever()
+
+def snd_msg(state, dist, trigg):
+    #if data is being sent, that means alarmstate is on!!!
+    #dataToSend=json.dumps({"state":[alarmState], , "dist":[distance]})
+    valueList = [state, dist, trigg]
+    stringVal = ' '.join(valueList)
+    print("data: " + stringVal)
+    mqttc.publish(snd_topic, stringVal)
 
 ####################functions#########################
 def readFile(fileName):
@@ -35,17 +82,34 @@ def firstTrigger():
 
 def timer():
     global alarmState, buttonFlag
+    #send this through mqtt
     alarmState = 0
     buttonFlag = 1
 
 def toggler():
     global alarmState
     alarmState = not alarmState
+    #send changed alarm state through mqtt
+
 
 def showDistance():
-    print("distance: " + str(ultrasonic.distance))
+    print("distance: " + str(distance))
 
 def alarm():
+    global ledState
+
+    if alarmState == 1: #ALARM ON
+        ledState = not ledState
+        led.value = ledState #turn on or off led depending on state
+        ledS.on
+
+    else if alarmState == 0: #ALARM OFF
+        ledState = False
+        led.off
+        ledS.off
+
+def main():
+    alarm()
 
 ###################interrupts#######################
 holdBtn.when_held = timer
