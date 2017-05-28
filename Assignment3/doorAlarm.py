@@ -21,8 +21,6 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 fileFlag = 0
 alarmState = 0
 ledState = False
-btnDown = False
-btnUpTime = None
 
 ##############################functions##############################
 def readFile(fileName):
@@ -61,19 +59,17 @@ def alarm():
     GPIO.output(LED, ledState) #write change to led
 
 def timerCallback(self):
-    global alarmState, btnDown, btnUpTime
+    global alarmState
 
-    if(GPIO.input(BTN)):
-        btnUpTime=millis()
-        btnDown=True
-    else:
-        if(btnDown):
-            if(millis()>=btnUpTime+5000):
-                alarmState=0
-        btnDown=False
+    start_time = time()
 
-def millis():
-	return int(round(time()*1000))
+    while GPIO.input(channel) == 0: # Wait for the button up
+        pass
+
+    buttonTime = time() - start_time    # How long was the button down?
+
+    if buttonTime >= 5:
+        alarmState = 0
 
 def main():
     global fileFlag, alarmState
