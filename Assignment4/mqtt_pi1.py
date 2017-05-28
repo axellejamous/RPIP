@@ -26,7 +26,7 @@ io.setup(btnMaster, io.IN)
 
 ############### MQTT section ##################
 
-Broker = "192.168.1.10"
+Broker = "172.16.181.166"
 
 rcv_topic = "home/groundfloor/livingroom/lights/lightx" #subscribe to messages on this topic
 snd_topic = "home/groundfloor/kitchen/lights/lightx" #publish messages to this topic
