@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import os
-from time import strftime, time
+from time import strftime, time, sleep
 
 ######################Axelle Jamous 2EA1#########################
 
@@ -90,7 +90,7 @@ def main():
 #       print("Door open " + str(i))
 
     alarm()
-    print(alarmState)
+    sleep(0.2)
 
 ##############################listeners/interrupts##############################
 GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
