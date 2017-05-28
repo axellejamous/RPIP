@@ -69,7 +69,7 @@ def timerCallback(self):
     print(str(buttonTime))
 
     if buttonTime >= 5:
-        print("hey")
+        print("i never get printed")
         alarmState = 0
         buttonFlag = 1
 
@@ -92,7 +92,7 @@ def main():
     sleep(0.2)
 
 ##############################listeners/interrupts##############################
-GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
+GPIO.add_event_detect(BTN, GPIO.FALLING, callback=timerCallback, bouncetime=200)
 
 
 ##############################toplevel script##############################
