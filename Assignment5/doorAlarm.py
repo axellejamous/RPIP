@@ -1,13 +1,11 @@
 import os
 from time import strftime, sleep
 from gpiozero import DistanceSensor, LED, Button
-import slacker as slack
-import mqtter as mqtt
+
+import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 
 ######################setup#########################
-toggleBtn = Button(2)
-distanceBtn = Button(3)
-holdBtn = Button(4, hold_time=5)
 led = LED(14)
 ledS = LED(15)
 ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m standard
@@ -15,66 +13,71 @@ ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m stand
 # TRIGGER WAS 4
 
 #################global declarations##################
-__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 triggerFlag = buttonFlag = alarmState = 0
 ledState = False
 
+valueList = None
+
+############### MQTT section ##################
+
+Broker = "192.168.1.10"
+
+snd_topic = "home/alarmer" #publish messages to this topic
+rcv_topic = "home/receiver" #sub to messages on this topic
+
+#when receving a message:
+def on_message(mqttc, obj, msg):
+    global valueList
+
+    print("subscribing.")
+    print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+    try:
+        p = msg.payload.decode("utf-8")
+        print("decoded payload: " + p)
+        valueList = p.split()
+        return
+    except Exception as e:
+        print(e)
+
+#when subscribing:
+def on_subscribe(mqttc, obj, mid, granted_qos):
+    print("Subscribed: "+str(mid)+" "+str(granted_qos))
+
+############### assign functions to mqtt ###############
+mqttc = mqtt.Client()
+mqttc.on_message = on_message
+mqttc.on_subscribe = on_subscribe
+mqttc.connect(Broker, 1883, 60)
+mqttc.loop_start() #or client.loop_forever()
+
+def snd_msg(state, dist, trigg):
+    #if data is being sent, that means alarmstate is on!!!
+    #dataToSend=json.dumps({"state":[alarmState], , "dist":[distance]})
+    valueList = [state, dist, trigg]
+    stringVal = ' '.join(valueList)
+    print("data: " + stringVal)
+    mqttc.publish(snd_topic, stringVal)
+
 ####################functions#########################
-def readFile(fileName):
-    #read file line per line w timestamps
-    f = open(os.path.join(__location__, fileName), "r")
-    lines = f.readlines() #list
-    f.close()
-    return lines
-
-def appendFile(fileName, stringToFile):
-    f = open(os.path.join(__location__, fileName), "a")
-    f.write(stringToFile)
-    f.close()
-
-def writeFile(fileName, stringToFile):
-    f = open(os.path.join(__location__, fileName), "w")
-    f.write(stringToFile)
-    f.close()
-
 def firstTrigger():
     #first time alarm starts going off, write to file:
     if triggerFlag==0:
-        appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
-        slack.send_msg('#general','Alarm was triggered.') #send slack msg
-
+        #send signal to trigger firsttrigger on pi2
+        snd_msg(alarmState, str(ultrasonic.distance), True)
         triggerFlag = 1 #first time has passed
 
-def alarmer():
+def alarm():
     global ledState
 
     if alarmState == 1: #ALARM ON
         ledState = not ledState
         led.value = ledState #turn on or off led depending on state
         ledS.on
-        mqtt.send_msg()#send mqtt msg
 
     else if alarmState == 0: #ALARM OFF
         ledState = False
         led.off
         ledS.off
-
-def timer():
-    global alarmState, buttonFlag
-    alarmState = 0
-    buttonFlag = 1
-
-def toggler():
-    global alarmState
-    alarmState = not alarmState
-
-def showDistance():
-    print("distance: " + str(ultrasonic.distance))
-
-###################interrupts#######################
-holdBtn.when_held = timer
-toggleBtn.when_pressed = toggler
-distanceBtn.when_pressed = showDistance
 
 #####################main###########################
 def main():
@@ -91,7 +94,8 @@ def main():
         if buttonFlag == 0:
             alarmState = 1
 
-    alarmer()
+    alarm()
+    snd_msg(alarmState, str(ultrasonic.distance), False)
     sleep(0.2)
 
 #################toplevel script####################
