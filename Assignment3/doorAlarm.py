@@ -92,7 +92,7 @@ def main():
     sleep(0.2)
 
 ##############################listeners/interrupts##############################
-GPIO.add_event_detect(BTN, GPIO.FALLING, callback=timerCallback, bouncetime=200)
+GPIO.add_event_detect(BTN, GPIO.FALLING, callback=timerCallback, bouncetime=500)
 
 
 ##############################toplevel script##############################
