@@ -18,7 +18,7 @@ GPIO.setup(LED, GPIO.OUT)
 ##############################declarations##############################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-fileFlag = 0
+fileFlag = buttonFlag = 0
 alarmState = 0
 ledState = False
 
@@ -58,7 +58,6 @@ def alarm():
     GPIO.output(LED, ledState) #write change to led
 
 def timerCallback(self):
-    print("button pressed")
     global alarmState
 
     start_time = time()
@@ -67,22 +66,25 @@ def timerCallback(self):
         pass
 
     buttonTime = time() - start_time    # How long was the button down?
+    print(str(buttonTime))
 
     if buttonTime >= 5:
         alarmState = 0
+        buttonFlag = 1
 
 def main():
-    global fileFlag, alarmState
+    global fileFlag, alarmState, buttonFlag
 
     i=GPIO.input(IRS) #read infrared sensor output
     if i==0:
-        fileFlag = 0
+        fileFlag = buttonFlag = 0
         alarmState = 0
 #       print("Door closed " + str(i))
 
     elif i==1:
         timeToFile()
-        alarmState = 1
+        if buttonFlag == 0:
+            alarmState = 1
 #       print("Door open " + str(i))
 
     alarm()
