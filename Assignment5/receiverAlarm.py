@@ -10,7 +10,7 @@ ledS = LED(15)
 
 #################global declarations##################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-alarmState = distance = 0
+ledState = alarmState = distance = 0
 
 ############### MQTT section ##################
 Broker = "192.168.1.10"
@@ -50,10 +50,10 @@ mqttc.on_subscribe = on_subscribe
 mqttc.connect(Broker, 1883, 60)
 mqttc.loop_start() #or client.loop_forever()
 
-def snd_msg(state, dist, trigg):
+def snd_msg(buttonHeld, toggle):
     #if data is being sent, that means alarmstate is on!!!
     #dataToSend=json.dumps({"state":[alarmState], , "dist":[distance]})
-    valueList = [state, dist, trigg]
+    valueList = [buttonHeld, toggle]
     stringVal = ' '.join(valueList)
     print("data: " + stringVal)
     mqttc.publish(snd_topic, stringVal)
@@ -81,16 +81,12 @@ def firstTrigger():
     slack.send_msg('#general','Alarm was triggered.') #send slack msg
 
 def timer():
-    global alarmState, buttonFlag
     #send this through mqtt
-    alarmState = 0
-    buttonFlag = 1
+    snd_msg(True, False)
 
 def toggler():
-    global alarmState
-    alarmState = not alarmState
     #send changed alarm state through mqtt
-
+    snd_msg(False, True)
 
 def showDistance():
     print("distance: " + str(distance))
@@ -115,3 +111,12 @@ def main():
 holdBtn.when_held = timer
 toggleBtn.when_pressed = toggler
 distanceBtn.when_pressed = showDistance
+
+#################toplevel script####################
+if __name__ == '__main__':
+    while True:
+        try:
+            main()
+        except KeyboardInterrupt:
+            print("Closing.")
+            #CLEANUP IS AUTOMATIC WITH GPIOZERO

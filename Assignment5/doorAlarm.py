@@ -13,13 +13,12 @@ ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m stand
 # TRIGGER WAS 4
 
 #################global declarations##################
-triggerFlag = buttonFlag = alarmState = 0
+triggerFlag = buttonFlag = toggleFlag = alarmState = 0
 ledState = False
 
 valueList = None
 
 ############### MQTT section ##################
-
 Broker = "192.168.1.10"
 
 snd_topic = "home/alarmer" #publish messages to this topic
@@ -27,7 +26,7 @@ rcv_topic = "home/receiver" #sub to messages on this topic
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
-    global valueList
+    global alarmState, buttonFlag
 
     print("subscribing.")
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
@@ -35,7 +34,16 @@ def on_message(mqttc, obj, msg):
         p = msg.payload.decode("utf-8")
         print("decoded payload: " + p)
         valueList = p.split()
+
+        if valueList[0]: #True
+            alarmState = 0
+            buttonFlag = 1
+
+        if valueList[1]: #True
+            alarmState = not alarmState #toggle
+            toggleFlag = 1
         return
+
     except Exception as e:
         print(e)
 
