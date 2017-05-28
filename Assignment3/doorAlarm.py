@@ -58,7 +58,7 @@ def alarm():
     GPIO.output(LED, ledState) #write change to led
 
 def timerCallback(self):
-    global alarmState
+    global alarmState, buttonFlag
 
     start_time = time()
 
@@ -69,7 +69,6 @@ def timerCallback(self):
     print(str(buttonTime))
 
     if buttonTime >= 5:
-        print("i never get printed")
         alarmState = 0
         buttonFlag = 1
 
