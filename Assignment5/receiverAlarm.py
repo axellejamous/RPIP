@@ -1,5 +1,10 @@
+import os
 import slacker as slack
+from time import strftime, sleep
 from gpiozero import LED, Button
+
+import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 
 ######################setup#########################
 toggleBtn = Button(2)
@@ -106,6 +111,7 @@ def alarm():
 
 def main():
     alarm()
+    sleep(0.2)
 
 ###################interrupts#######################
 holdBtn.when_held = timer

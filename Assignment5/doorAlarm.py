@@ -1,6 +1,5 @@
-import os
-from time import strftime, sleep
-from gpiozero import DistanceSensor, LED, Button
+from time import sleep
+from gpiozero import DistanceSensor, LED
 
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
