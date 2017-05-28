@@ -2,12 +2,14 @@ import os
 from time import strftime
 from gpiozero import DistanceSensor, LED, Button
 import slacker as slack
+import mqtter as mqtt
 
 ######################setup#########################
 toggleBtn = Button(2)
 distanceBtn = Button(3)
 holdBtn = Button(4, hold_time=5)
 led = LED(14)
+ledS = LED(15)
 ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m standard
 # LED WAS 3
 # TRIGGER WAS 4
@@ -16,7 +18,6 @@ ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m stand
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 triggerFlag = alarmState = 0
 ledState = False
-
 
 ####################functions#########################
 def readFile(fileName):
@@ -48,10 +49,13 @@ def alarmer():
     if alarmState == 1: #ALARM ON
         ledState = not ledState
         led.value = ledState #turn on or off led depending on state
+        ledS.on
+        mqtt.send_msg()#send mqtt msg
 
     else if alarmState == 0: #ALARM OFF
         ledState = False
         led.off
+        ledS.off
 
 def timer():
     global alarmState
