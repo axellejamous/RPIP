@@ -55,20 +55,18 @@ def alarm():
 
     if alarmState == 1: #alarm on
         ledState = not ledState
+        print("alarm on ledstate: " + str(ledState))
     elif alarmState == 0: #alarm off
         ledState = False
-
     GPIO.output(LED, ledState) #write change to led
 
 def timerCallback(self):
     global alarmState, btnDown, btnUpTime
 
     if(GPIO.input(BTN)):
-        print("Rising edge detected")
         btnUpTime=millis()
         btnDown=True
     else:
-        print("Falling edge detected")
         if(btnDown):
             if(millis()>=btnUpTime+5000):
                 alarmState=0
@@ -92,6 +90,7 @@ def main():
 #       print("Door open " + str(i))
 
     alarm()
+    print(alarmState)
 
 ##############################listeners/interrupts##############################
 GPIO.add_event_detect(BTN, GPIO.BOTH, callback=timerCallback, bouncetime=200)
