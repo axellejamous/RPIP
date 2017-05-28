@@ -60,7 +60,7 @@ def alarm():
 def timerCallback(self):
     global alarmState
 
-    start_time = time()
+    start_time = int(round(time()*1000))
 
     while GPIO.input(self) == 0: # Wait for the button up
         pass
@@ -68,7 +68,7 @@ def timerCallback(self):
     buttonTime = time() - start_time    # How long was the button down?
     print(str(buttonTime))
 
-    if buttonTime >= 5:
+    if buttonTime >= (start_time+5000):
         print("hey")
         alarmState = 0
         buttonFlag = 1
