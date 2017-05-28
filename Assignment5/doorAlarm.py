@@ -99,7 +99,7 @@ def main():
     ultrasonic.wait_for_in_range()
         print("Door open")
         firstTrigger()
-        if buttonFlag == 0:
+        if buttonFlag == 0 and toggleFlag == 0:
             alarmState = 1
 
     alarm()
