@@ -39,7 +39,7 @@ def main():
         init_leds(leds)
         mqttc = mqtt.Client()
         mqttc.on_message = on_message
-        mqttc.connect("127.0.0.1")
+        mqttc.connect("172.16.181.166")
         mqttc.subscribe('tmp')
         while True:
                 mqttc.loop()
