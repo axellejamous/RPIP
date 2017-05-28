@@ -53,17 +53,17 @@ def alarm():
 
     if alarmState == 1: #alarm on
         ledState = not ledState
-        print("alarm on ledstate: " + str(ledState))
     elif alarmState == 0: #alarm off
         ledState = False
     GPIO.output(LED, ledState) #write change to led
 
 def timerCallback(self):
+    print("button pressed")
     global alarmState
 
     start_time = time()
 
-    while GPIO.input(channel) == 0: # Wait for the button up
+    while GPIO.input(self) == 0: # Wait for the button up
         pass
 
     buttonTime = time() - start_time    # How long was the button down?
