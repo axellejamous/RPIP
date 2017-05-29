@@ -90,14 +90,14 @@ def alarm():
 def outOfRange():
     global triggerFlag, buttonFlag, alarmState
 
-    #print("Door closed")
+    print("Door closed")
     triggerFlag = buttonFlag = 0 #reset file, toggle and button flags
     alarmState = 0 #alarm is off
 
 def inRange():
     global alarmState
 
-    #print("Door open")
+    print("Door open")
     firstTrigger()
     if buttonFlag == 0:
         alarmState = 1
