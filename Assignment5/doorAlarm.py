@@ -34,13 +34,16 @@ def on_message(mqttc, obj, msg):
         print("decoded payload: " + p)
         valueList = p.split()
 
-        if valueList[0]: #True
+        if valueList[0]: #button hold - True
             alarmState = 0
             buttonFlag = 1
 
-        if valueList[1]: #True
-            alarmState = not alarmState #toggle
+        if valueList[1]: #toggle - True
+            alarmState = not alarmState
             toggleFlag = 1
+
+        #elif not valueList[1]:
+        #toggleFlag = 0
         return
 
     except Exception as e:
@@ -50,20 +53,17 @@ def on_message(mqttc, obj, msg):
 def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
-############### assign functions to mqtt ###############
+def snd_msg(state, dist, trigg):
+    valueList = [state, dist, trigg]
+    stringVal = ' '.join(valueList)
+    print("data: " + stringVal)
+    mqttc.publish(snd_topic, stringVal)
+
 mqttc = mqtt.Client()
 mqttc.on_message = on_message
 mqttc.on_subscribe = on_subscribe
 mqttc.connect(Broker, 1883, 60)
 mqttc.loop_start() #or client.loop_forever()
-
-def snd_msg(state, dist, trigg):
-    #if data is being sent, that means alarmstate is on!!!
-    #dataToSend=json.dumps({"state":[alarmState], , "dist":[distance]})
-    valueList = [state, dist, trigg]
-    stringVal = ' '.join(valueList)
-    print("data: " + stringVal)
-    mqttc.publish(snd_topic, stringVal)
 
 ####################functions#########################
 def firstTrigger():
@@ -88,11 +88,11 @@ def alarm():
 
 #####################main###########################
 def main():
-    global triggerFlag, alarmState, buttonFlag
+    global triggerFlag, alarmState, buttonFlag, toggleFlag
 
     ultrasonic.wait_for_out_of_range()
         print("Door closed")
-        triggerFlag = buttonFlag = 0 #reset file and button flags
+        triggerFlag = buttonFlag = toggleFlag = 0 #reset file, toggle and button flags
         alarmState = 0 #alarm is off
 
     ultrasonic.wait_for_in_range()
