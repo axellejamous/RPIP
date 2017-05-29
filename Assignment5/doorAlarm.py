@@ -18,7 +18,7 @@ ledState = False
 valueList = None
 
 ############### MQTT section ##################
-Broker = "192.168.1.10"
+Broker = "172.16.174.127"
 
 snd_topic = "home/alarmer" #publish messages to this topic
 rcv_topic = "home/receiver" #sub to messages on this topic

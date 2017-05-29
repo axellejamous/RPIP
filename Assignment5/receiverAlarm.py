@@ -18,7 +18,7 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 ledState = alarmState = distance = 0
 
 ############### MQTT section ##################
-Broker = "192.168.1.10"
+Broker = "172.16.174.127"
 
 snd_topic = "home/receiver" #sub to messages on this topic
 rcv_topic = "home/alarmer" #publish messages to this topic
