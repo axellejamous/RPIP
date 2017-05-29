@@ -18,7 +18,7 @@ def cleanupTool():
         print("".join(lines))
         startdate=strptime(input("Select start date to remove"),"%a, %d %b %Y %H:%M:%S")
         enddate=strptime(input("Select end date to remove"),"%a, %d %b %Y %H:%M:%S")
-        print("Start: " + startdate + " End: " + enddate)
+        print("Start: " + str(startdate) + " End: " + str(enddate))
         for line in list(lines):
             dateLine=strptime(line.rstrip("\n"),"%a, %d %b %Y %H:%M:%S")
             if(startdate<=dateLine<=enddate):
