@@ -25,22 +25,16 @@ rcv_topic = "home/alarmer" #publish messages to this topic
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
-    global alarmState, distance
-
     print("subscribing.")
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     try:
         p = msg.payload.decode("utf-8")
         print("decoded payload: " + p)
-        valueList = p.split()
 
-        alarmState = valueList[0]
-        distance = valueList[1]
-
-        if valueList[2]: #True
-            firstTrigger()
-
+        x = json.loads(p)
+        handle_values(tuple(x['values']))
         return
+
     except Exception as e:
         print(e)
 
@@ -56,14 +50,20 @@ mqttc.connect(Broker, 1883, 60)
 mqttc.loop_start() #or client.loop_forever()
 
 def snd_msg(buttonHeld, toggle):
-    #if data is being sent, that means alarmstate is on!!!
-    #dataToSend=json.dumps({"state":[alarmState], , "dist":[distance]})
-    valueList = [buttonHeld, toggle]
-    stringVal = ' '.join(valueList)
-    print("data: " + stringVal)
-    mqttc.publish(snd_topic, stringVal)
+    dataToSend=json.dumps({"values":[buttonHeld,toggle]})
+    print("sending data through mqtt: " + dataToSend)
+    mqttc.publish(snd_topic, dataToSend)
 
 ####################functions#########################
+def handle_values(values):
+    global alarmState, distance
+
+    alarmState = values[0]
+    distance = values[1]
+
+    if values[2]: #True
+        firstTrigger()
+
 def readFile(fileName):
     #read file line per line w timestamps
     f = open(os.path.join(__location__, fileName), "r")
@@ -111,6 +111,9 @@ def alarm():
 
 def main():
     alarm()
+    sleep(0.2)
+
+    snd_msg(False, False) #reset buttons
     sleep(0.2)
 
 ###################interrupts#######################

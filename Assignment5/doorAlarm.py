@@ -25,24 +25,14 @@ rcv_topic = "home/receiver" #sub to messages on this topic
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
-    global alarmState, buttonFlag, toggleFlag
-
     print("subscribing.")
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     try:
         p = msg.payload.decode("utf-8")
         print("decoded payload: " + p)
-        valueList = p.split()
 
-        if valueList[0]: #button hold - True
-            alarmState = 0
-            buttonFlag = 1
-
-        if valueList[1]: #toggle - True
-            toggleFlag = True
-        elif not valueList[1]:
-        	toggleFlag = False
-
+        x = json.loads(p)
+        handle_values(tuple(x['values']))
         return
 
     except Exception as e:
@@ -53,11 +43,9 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
 def snd_msg(state, dist, trigg):
-    print("mqtt send message start")
-    valueList = [str(state), str(dist), str(trigg)]
-    stringVal = ' '.join(valueList)
-    print("data: " + stringVal)
-    mqttc.publish(snd_topic, stringVal)
+    dataToSend=json.dumps({"values":[state,dist,trigg]})
+    print("sending data through mqtt: " + dataToSend)
+    mqttc.publish(snd_topic, dataToSend)
 
 mqttc = mqtt.Client()
 mqttc.on_message = on_message
@@ -66,6 +54,18 @@ mqttc.connect(Broker, 1883, 60)
 mqttc.loop_start() #or client.loop_forever()
 
 ####################functions#########################
+def handle_values(values):
+    global alarmState, buttonFlag, toggleFlag
+
+    if values[0]: #button hold - True
+        alarmState = 0
+        buttonFlag = 1
+
+    if values[1]: #toggle - True
+        toggleFlag = True
+    elif not values[1]:
+        toggleFlag = False
+
 def firstTrigger():
     global triggerFlag
 
