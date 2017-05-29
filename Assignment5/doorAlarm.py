@@ -7,7 +7,7 @@ import paho.mqtt.publish as publish
 ######################setup#########################
 led = LED(14)
 ledS = LED(15)
-ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m standard
+ultrasonic = DistanceSensor(echo=17, trigger=4) #threshold is set to 0.3m standard
 # LED WAS 3
 # TRIGGER WAS 4
 
