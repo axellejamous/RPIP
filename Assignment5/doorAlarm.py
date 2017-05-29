@@ -12,8 +12,8 @@ ultrasonic = DistanceSensor(echo=17, trigger=18) #threshold is set to 0.3m stand
 # TRIGGER WAS 4
 
 #################global declarations##################
-triggerFlag = buttonFlag = toggleFlag = alarmState = 0
-ledState = False
+triggerFlag = buttonFlag = alarmState = 0
+ledState = toggleFlag = False
 
 valueList = None
 
@@ -39,9 +39,9 @@ def on_message(mqttc, obj, msg):
             buttonFlag = 1
 
         if valueList[1]: #toggle - True
-            toggleFlag = 1
+            toggleFlag = True
         elif not valueList[1]:
-        	toggleFlag = 0
+        	toggleFlag = False
 
         return
 
@@ -53,7 +53,8 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
 def snd_msg(state, dist, trigg):
-    valueList = [state, dist, trigg]
+    print("mqtt send message start")
+    valueList = [str(state), str(dist), str(trigg)]
     stringVal = ' '.join(valueList)
     print("data: " + stringVal)
     mqttc.publish(snd_topic, stringVal)
@@ -66,11 +67,14 @@ mqttc.loop_start() #or client.loop_forever()
 
 ####################functions#########################
 def firstTrigger():
+    global triggerFlag
+
     #first time alarm starts going off, write to file:
     if triggerFlag==0:
-        #send signal to trigger firsttrigger on pi2
+        print(str(ultrasonic.distance))
         snd_msg(alarmState, str(ultrasonic.distance), True)
         triggerFlag = 1 #first time has passed
+        print("first trigger.")
 
 def alarm():
     global ledState
@@ -99,6 +103,7 @@ def inRange():
     firstTrigger()
     if buttonFlag == 0:
         alarmState = 1
+        print("alarm state changed to 1.")
 
 #####################main###########################
 def main():
@@ -106,6 +111,7 @@ def main():
     ultrasonic.when_out_of_range = outOfRange()
     ultrasonic.when_in_range = inRange()
 
+    print("starting alarm")
     alarm()
     snd_msg(alarmState, str(ultrasonic.distance), False)
     sleep(0.2)
@@ -122,5 +128,5 @@ if __name__ == '__main__':
     while True:
         if toggleFlag:
         	mainToggle()
-        elif not toggleFlag():
+        elif not toggleFlag:
             main()
