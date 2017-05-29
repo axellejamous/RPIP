@@ -85,20 +85,26 @@ def alarm():
         led.off
         ledS.off
 
+def outOfRange():
+    global triggerFlag, buttonFlag, alarmState
+
+    print("Door closed")
+    triggerFlag = buttonFlag = 0 #reset file, toggle and button flags
+    alarmState = 0 #alarm is off
+
+def inRange():
+    global alarmState
+
+    print("Door open")
+    firstTrigger()
+    if buttonFlag == 0:
+        alarmState = 1
+
 #####################main###########################
 def main():
-    global triggerFlag, alarmState, buttonFlag
 
-    ultrasonic.wait_for_out_of_range()
-        print("Door closed")
-        triggerFlag = buttonFlag = 0 #reset file, toggle and button flags
-        alarmState = 0 #alarm is off
-
-    ultrasonic.wait_for_in_range()
-        print("Door open")
-        firstTrigger()
-        if buttonFlag == 0:
-            alarmState = 1
+    ultrasonic.when_out_of_range = outOfRange()
+    ultrasonic.when_in_range = inRange()
 
     alarm()
     snd_msg(alarmState, str(ultrasonic.distance), False)
@@ -114,11 +120,7 @@ def mainToggle():
 #################toplevel script####################
 if __name__ == '__main__':
     while True:
-        try:
-        	if toggleFlag:
-        		mainToggle()
-        	elif not toggleFlag():
-           		main()
-        except KeyboardInterrupt:
-            print("Closing.")
-            #CLEANUP IS AUTOMATIC WITH GPIOZERO
+        if toggleFlag:
+        	mainToggle()
+        elif not toggleFlag():
+            main()

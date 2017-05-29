@@ -121,8 +121,4 @@ distanceBtn.when_pressed = showDistance
 #################toplevel script####################
 if __name__ == '__main__':
     while True:
-        try:
-            main()
-        except KeyboardInterrupt:
-            print("Closing.")
-            #CLEANUP IS AUTOMATIC WITH GPIOZERO
+        main()
