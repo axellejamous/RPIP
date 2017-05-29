@@ -25,7 +25,7 @@ rcv_topic = "home/receiver" #sub to messages on this topic
 
 #when receving a message:
 def on_message(mqttc, obj, msg):
-    global alarmState, buttonFlag
+    global alarmState, buttonFlag, toggleFlag
 
     print("subscribing.")
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
@@ -39,11 +39,10 @@ def on_message(mqttc, obj, msg):
             buttonFlag = 1
 
         if valueList[1]: #toggle - True
-            alarmState = not alarmState
             toggleFlag = 1
+        elif not valueList[1]:
+        	toggleFlag = 0
 
-        #elif not valueList[1]:
-        #toggleFlag = 0
         return
 
     except Exception as e:
@@ -88,28 +87,38 @@ def alarm():
 
 #####################main###########################
 def main():
-    global triggerFlag, alarmState, buttonFlag, toggleFlag
+    global triggerFlag, alarmState, buttonFlag
 
     ultrasonic.wait_for_out_of_range()
         print("Door closed")
-        triggerFlag = buttonFlag = toggleFlag = 0 #reset file, toggle and button flags
+        triggerFlag = buttonFlag = 0 #reset file, toggle and button flags
         alarmState = 0 #alarm is off
 
     ultrasonic.wait_for_in_range()
         print("Door open")
         firstTrigger()
-        if buttonFlag == 0 and toggleFlag == 0:
+        if buttonFlag == 0:
             alarmState = 1
 
     alarm()
     snd_msg(alarmState, str(ultrasonic.distance), False)
     sleep(0.2)
 
+def mainToggle():
+	global alarmState
+
+	alarmState = not alarmState
+	alarm()
+	sleep(0.2)
+
 #################toplevel script####################
 if __name__ == '__main__':
     while True:
         try:
-            main()
+        	if toggleFlag:
+        		mainToggle()
+        	elif not toggleFlag():
+           		main()
         except KeyboardInterrupt:
             print("Closing.")
             #CLEANUP IS AUTOMATIC WITH GPIOZERO
