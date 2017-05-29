@@ -103,12 +103,12 @@ def alarm():
     if alarmState == 1: #ALARM ON
         ledState = not ledState
         led.value = ledState #turn on or off led depending on state
-        ledS.on
+        ledS.on()
 
     elif alarmState == 0: #ALARM OFF
         ledState = False
-        led.off
-        ledS.off
+        led.off()
+        ledS.off()
 
 def main():
     alarm()
