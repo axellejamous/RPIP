@@ -16,8 +16,6 @@ ultrasonic = DistanceSensor(echo=17, trigger=4) #threshold is set to 0.3m standa
 triggerFlag = buttonFlag = alarmState = 0
 ledState = toggleFlag = False
 
-valueList = None
-
 ############### MQTT section ##################
 Broker = "192.168.1.10"
 
@@ -27,7 +25,6 @@ rcv_topic = "home/receiver" #sub to messages on this topic
 #when receving a message:
 def on_message(mqttc, obj, msg):
     print("subscribing.")
-    print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     try:
         p = msg.payload.decode("utf-8")
         print("decoded payload: " + p)
@@ -45,7 +42,7 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
 
 def snd_msg(state, dist, trigg):
     dataToSend=json.dumps({"values":[state,dist,trigg]})
-    print("sending data through mqtt: " + dataToSend)
+    #print("sending data through mqtt: " + dataToSend)
     mqttc.publish(snd_topic, dataToSend)
 
 mqttc = mqtt.Client()
@@ -75,7 +72,7 @@ def firstTrigger():
         print(str(ultrasonic.distance))
         snd_msg(alarmState, str(ultrasonic.distance), True)
         triggerFlag = 1 #first time has passed
-        print("first trigger.")
+        #print("first trigger.")
 
 def alarm():
     global ledState
@@ -93,18 +90,18 @@ def alarm():
 def outOfRange():
     global triggerFlag, buttonFlag, alarmState
 
-    print("Door closed")
+    #print("Door closed")
     triggerFlag = buttonFlag = 0 #reset file, toggle and button flags
     alarmState = 0 #alarm is off
 
 def inRange():
     global alarmState
 
-    print("Door open")
+    #print("Door open")
     firstTrigger()
     if buttonFlag == 0:
         alarmState = 1
-        print("alarm state changed to 1.")
+        #print("alarm state changed to 1.")
 
 #####################main###########################
 def main():
@@ -112,7 +109,7 @@ def main():
     ultrasonic.when_out_of_range = outOfRange()
     ultrasonic.when_in_range = inRange()
 
-    print("starting alarm")
+    #print("starting alarm")
     alarm()
     snd_msg(alarmState, str(ultrasonic.distance), False)
     sleep(0.2)
