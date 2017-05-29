@@ -69,7 +69,7 @@ def firstTrigger():
 
     #first time alarm starts going off, write to file:
     if triggerFlag==0:
-        #print(str(ultrasonic.distance))
+        print(str(ultrasonic.distance))
         snd_msg(alarmState, ultrasonic.distance, True)
         triggerFlag = 1 #first time has passed
         #print("first trigger.")
