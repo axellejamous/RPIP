@@ -106,8 +106,8 @@ def inRange():
 #####################main###########################
 def main():
 
-    ultrasonic.when_out_of_range = outOfRange()
-    ultrasonic.when_in_range = inRange()
+    ultrasonic.when_out_of_range() = outOfRange()
+    ultrasonic.when_in_range() = inRange()
 
     #print("starting alarm")
     alarm()
