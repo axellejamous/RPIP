@@ -17,6 +17,7 @@ ledS = LED(15)
 #################global declarations##################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 ledState = alarmState = distance = 0
+toggleState = False
 
 ############### MQTT section ##################
 Broker = "192.168.1.10"
@@ -91,8 +92,11 @@ def timer():
     snd_msg(True, False)
 
 def toggler():
+    global toggleState
+
+    toggleState = not toggleState
     #send changed alarm state through mqtt
-    snd_msg(False, True)
+    snd_msg(False, toggleState)
 
 def showDistance():
     print("distance: " + str(distance))
