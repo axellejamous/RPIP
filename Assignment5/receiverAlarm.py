@@ -95,7 +95,7 @@ def writeFile(fileName, stringToFile):
 
 def firstTrigger():
     appendFile("timeFile.txt", "{}\n".format(strftime("%a, %d %b %Y %H:%M:%S"))) #output time to file
-    slack.send_msg('#general','Alarm was triggered.') #send slack msg
+    slack.send_msg('#pi','Alarm was triggered.') #send slack msg
 
 def timer():
     global timerState
