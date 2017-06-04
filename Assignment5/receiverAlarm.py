@@ -20,7 +20,7 @@ ledState = alarmState = distance = 0
 toggleState = False
 
 ############### MQTT section ##################
-Broker = "192.168.1.10"
+Broker = "192.168.1.118"
 
 snd_topic = "home/receiver" #sub to messages on this topic
 rcv_topic = "home/alarmer" #publish messages to this topic
