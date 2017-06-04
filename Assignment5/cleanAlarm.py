@@ -16,9 +16,9 @@ def cleanupTool():
                 lines.remove(line)
     elif(mode=="2"):
         print("".join(lines))
-        startdate=time.strptime(input("Select start date to remove"),"%a, %d %b %Y %H:%M:%S")
-        enddate=time.strptime(input("Select end date to remove"),"%a, %d %b %Y %H:%M:%S")
-        print("Start: " + startdate + " End: " + enddate)
+        startdate=strptime(input("Select start date to remove "),"%a, %d %b %Y %H:%M:%S")
+        enddate=strptime(input("Select end date to remove "),"%a, %d %b %Y %H:%M:%S")
+        print("Start: " + str(startdate) + " End: " + str(enddate))
         for line in list(lines):
             dateLine=strptime(line.rstrip("\n"),"%a, %d %b %Y %H:%M:%S")
             if(startdate<=dateLine<=enddate):
@@ -27,7 +27,6 @@ def cleanupTool():
     #Write changes to the file:
     print("Writing changes to file.")
     alarm.writeFile("timeFile.txt","".join(lines))
-
 
 def main():
 	try:
