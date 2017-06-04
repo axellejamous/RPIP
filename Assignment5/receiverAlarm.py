@@ -18,6 +18,7 @@ ledS = LED(15)
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 ledState = alarmState = distance = 0
 toggleState = False
+timerState = True
 
 ############### MQTT section ##################
 Broker = "192.168.1.118"
@@ -41,7 +42,6 @@ def on_message(mqttc, obj, msg):
         x = json.loads(p)
         handle_values(tuple(x['values']))
         return
-
     except Exception as e:
         print(e)
 
@@ -64,13 +64,17 @@ def snd_msg(buttonHeld, toggle):
 
 ####################functions#########################
 def handle_values(values):
-    global alarmState, distance
+    global alarmState, distance, timerState
 
     alarmState = values[0]
     distance = values[1]
 
     if values[2]: #True
         firstTrigger()
+
+    #alarm was retriggered
+    timerState = False #so timerbtn untriggered
+
 
 def readFile(fileName):
     #read file line per line w timestamps
@@ -94,15 +98,18 @@ def firstTrigger():
     slack.send_msg('#general','Alarm was triggered.') #send slack msg
 
 def timer():
+    global timerState
+
+    timerState = True
     #send this through mqtt
-    snd_msg(True, False)
+    snd_msg(timerState, toggleState)
 
 def toggler():
     global toggleState
 
     toggleState = not toggleState
     #send changed alarm state through mqtt
-    snd_msg(False, toggleState)
+    snd_msg(timerState, toggleState)
 
 def showDistance():
     print("distance: " + str(distance))
@@ -110,21 +117,18 @@ def showDistance():
 def alarm():
     global ledState
 
-    if alarmState == 1: #ALARM ON
+    if alarmState == 1 and not timerState: #ALARM ON
         ledState = not ledState
         led.value = ledState #turn on or off led depending on state
         ledS.on()
 
-    elif alarmState == 0: #ALARM OFF
+    elif alarmState == 0 or timerState: #ALARM OFF
         ledState = False
         led.off()
         ledS.off()
 
 def main():
     alarm()
-    sleep(0.2)
-
-    snd_msg(False, False) #reset buttons
     sleep(0.2)
 
 ###################interrupts#######################
