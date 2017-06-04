@@ -22,6 +22,11 @@ Broker = "192.168.1.118"
 snd_topic = "home/alarmer" #publish messages to this topic
 rcv_topic = "home/receiver" #sub to messages on this topic
 
+#when connecting:
+def on_connect(mqttc, obj, flags, rc):
+    print("rc: "+str(rc))
+    mqttc.subscribe(rcv_topic) #sub
+
 #when receving a message:
 def on_message(mqttc, obj, msg):
     print("subscribing.")
@@ -32,7 +37,6 @@ def on_message(mqttc, obj, msg):
         x = json.loads(p)
         handle_values(tuple(x['values']))
         return
-
     except Exception as e:
         print(e)
 
@@ -46,6 +50,7 @@ def snd_msg(state, dist, trigg):
     mqttc.publish(snd_topic, dataToSend)
 
 mqttc = mqtt.Client()
+mqttc.on_connect = on_connect
 mqttc.on_message = on_message
 mqttc.on_subscribe = on_subscribe
 mqttc.connect(Broker, 1883, 60)
