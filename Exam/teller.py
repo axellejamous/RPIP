@@ -50,7 +50,9 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
 def snd_mqtt(state, dist, trigg):
-    dataToSend=json.dumps({"persons":[personCount]})
+    lines = readFile("persons.txt")
+    count = lines[0]
+    dataToSend=json.dumps({"persons":[count]})
     print("sending data through mqtt: " + dataToSend)
     mqttc.publish(snd_topic, dataToSend)
 
@@ -69,15 +71,10 @@ def readFile(fileName):
     f.close()
     return lines
 
-def appendFile(fileName, stringToFile):
-    f = open(os.path.join(__location__, fileName), "a")
-    f.write(stringToFile)
-    f.close()
-
 def writeFile(fileName, stringToFile):
     f = open(os.path.join(__location__, fileName), "w")
     f.write(stringToFile)
-    f.close()
+    f.close()  
 
 def timerCallback(self):
     global personCount
@@ -97,7 +94,7 @@ def timerCallback(self):
         personCount++
 
 def personsToFile():
-    appendFile("persons.txt", str(personCount))
+    writeFile("persons.txt", str(personCount))
 
 def showPersons(arrPerson):
     print("Persons received on topic exam: " + arrPerson[0])
