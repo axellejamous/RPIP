@@ -8,11 +8,12 @@ import paho.mqtt.publish as publish
 ######################Axelle Jamous 2EA1#########################
 
 ##############################setup##############################
-BTN = 11
-LED = GPIO.PWM(12, 100) #create object red for PWM on port 12 at 100 Hertz  
-
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
+
+BTN = 17
+LED = GPIO.PWM(18, 100) #create object red for PWM on port 12 at 100 Hertz  
+
 GPIO.setup(BTN, GPIO.IN)
 GPIO.setup(LED, GPIO.OUT)
 
