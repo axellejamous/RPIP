@@ -55,7 +55,7 @@ def on_message(mqttc, obj, msg):
 def on_subscribe(mqttc, obj, mid, granted_qos):
     print("Subscribed")
 
-def snd_mqtt(state, dist, trigg):
+def snd_mqtt():
     lines = readFile("persons.txt")
     count = lines[0]
     dataToSend=json.dumps({"persons":[count,snd_msg]})
