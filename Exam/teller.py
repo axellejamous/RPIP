@@ -11,11 +11,13 @@ import paho.mqtt.publish as publish
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
+ledPin = 18
+GPIO.setup(ledPin, GPIO.OUT)
+
 BTN = 17
-LED = GPIO.PWM(18, 100) #create object red for PWM on port 12 at 100 Hertz  
+LED = GPIO.PWM(ledPin, 100) #create object red for PWM on port 12 at 100 Hertz  
 
 GPIO.setup(BTN, GPIO.IN)
-GPIO.setup(LED, GPIO.OUT)
 
 LED.start(0) #start LED on 0 percent duty cycle (off)
 
