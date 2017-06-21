@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /Documents/RPIP/Assignment5/doorAlarm.py
+ExecStart=/usr/bin/python /Documents/RPIP/Assignment5/doorAlarm.py > /Documents/doorAlarm.log 2>&1
 Restart=on-abort
 
 [Install]
