@@ -17,7 +17,7 @@ triggerFlag = buttonFlag = alarmState = 0
 ledState = toggleFlag = False
 
 ############### MQTT section ##################
-Broker = "192.168.1.118"
+Broker = "172.16.217.177"
 
 snd_topic = "home/alarmer" #publish messages to this topic
 rcv_topic = "home/receiver" #sub to messages on this topic
