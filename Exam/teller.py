@@ -95,6 +95,7 @@ def timerCallback(self):
         snd_mqtt()
     else:
         personCount += 1
+        print("Person count went up: " + str(personCount))
 
 def personsToFile():
     writeFile("persons.txt", str(personCount))
