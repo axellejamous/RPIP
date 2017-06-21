@@ -20,6 +20,7 @@ GPIO.setup(LED, GPIO.OUT)
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 personCount = 0
+send_msg = "dontsend" #at the moment we have to manually toggle send as no instructions were provided this is purely for testing purposes
 
 #MQTT
 Broker = "172.16.160.180" #my current IP
@@ -40,7 +41,7 @@ def on_message(mqttc, obj, msg):
         print("decoded payload: " + p)
 
         x = json.loads(p)
-        showPersons(tuple(x['persons']))
+        handleIncomingValues(tuple(x['persons']))
         return
     except Exception as e:
         print(e)
@@ -52,7 +53,7 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
 def snd_mqtt(state, dist, trigg):
     lines = readFile("persons.txt")
     count = lines[0]
-    dataToSend=json.dumps({"persons":[count]})
+    dataToSend=json.dumps({"persons":[count,snd_msg]})
     print("sending data through mqtt: " + dataToSend)
     mqttc.publish(snd_topic, dataToSend)
 
@@ -96,8 +97,11 @@ def timerCallback(self):
 def personsToFile():
     writeFile("persons.txt", str(personCount))
 
-def showPersons(arrPerson):
+def handleIncomingValues(arrPerson):
     print("Persons received on topic exam: " + arrPerson[0])
+
+    if arrPerson[1] == "send":
+        snd_mqtt()
 
 def main():
     return
