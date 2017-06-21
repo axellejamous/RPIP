@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import os
-from time import strftime, time, sleep
+from time import time, sleep
 import json
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
@@ -9,12 +9,14 @@ import paho.mqtt.publish as publish
 
 ##############################setup##############################
 BTN = 11
-LED = 12 #pwm
+LED = GPIO.PWM(12, 100) #create object red for PWM on port 12 at 100 Hertz  
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(BTN, GPIO.IN)
 GPIO.setup(LED, GPIO.OUT)
+
+LED.start(0) #start LED on 0 percent duty cycle (off)
 
 ##############################declarations##############################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -104,7 +106,8 @@ def handleIncomingValues(arrPerson):
         snd_mqtt()
 
 def main():
-    return
+    LED.ChangeDutyCycle((personCount%10)*10)
+    sleep(0.02)
 
 ##############################listeners/interrupts##############################
 GPIO.add_event_detect(BTN, GPIO.FALLING, callback=timerCallback, bouncetime=500)
@@ -116,4 +119,5 @@ if __name__ == '__main__':
             main()
         except KeyboardInterrupt:
             print("Closing.")
+            LED.stop()
             GPIO.cleanup()
