@@ -24,7 +24,7 @@ LED.start(0) #start LED on 0 percent duty cycle (off)
 ##############################declarations##############################
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-personCount = 5
+personCount = 0
 send_msg = "dontsend" #at the moment we have to manually toggle send as no instructions were provided this is purely for testing purposes
 
 #MQTT
