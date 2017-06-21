@@ -84,6 +84,7 @@ def writeFile(fileName, stringToFile):
 
 def timerCallback(self):
     global personCount
+    print("button pressed")
 
     start_time = time()
 
