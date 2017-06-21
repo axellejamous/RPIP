@@ -35,7 +35,7 @@ rcv_topic = "examen" #sub to messages on this topic
 ##############################MQTT functions##############################
 #when connecting:
 def on_connect(mqttc, obj, flags, rc):
-    print("rc: "+str(rc))
+    print("mqtt connected")
     mqttc.subscribe(rcv_topic) #sub
 
 #when receving a message:
@@ -53,7 +53,7 @@ def on_message(mqttc, obj, msg):
 
 #when subscribing:
 def on_subscribe(mqttc, obj, mid, granted_qos):
-    print("Subscribed: "+str(mid)+" "+str(granted_qos))
+    print("Subscribed")
 
 def snd_mqtt(state, dist, trigg):
     lines = readFile("persons.txt")
@@ -105,7 +105,7 @@ def personsToFile():
     writeFile("persons.txt", str(personCount))
 
 def handleIncomingValues(arrPerson):
-    print("Persons received on topic exam: " + arrPerson[0])
+    print("Persons received on topic exam: " + str(arrPerson[0]))
 
     if arrPerson[1] == "send":
         snd_mqtt()
