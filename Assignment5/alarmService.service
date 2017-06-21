@@ -1,0 +1,11 @@
+[Unit]
+Description=Door Alarm
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /Documents/RPIP/Assignment5/doorAlarm.py
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
