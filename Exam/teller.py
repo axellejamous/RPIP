@@ -58,7 +58,7 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
 def snd_mqtt():
     lines = readFile("persons.txt")
     count = lines[0]
-    dataToSend=json.dumps({"persons":[count,snd_msg]})
+    dataToSend=json.dumps({"persons":[count,send_msg]})
     print("sending data through mqtt: " + dataToSend)
     mqttc.publish(snd_topic, dataToSend)
 
